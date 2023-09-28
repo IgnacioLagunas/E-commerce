@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:cid', async (req, res) => {
   try {
-    res.json(await cm.getCarts(+req.params.cid));
+    res.json(await cm.getCart(+req.params.cid));
   } catch (error) {
     res.json({ message: error.message });
   }

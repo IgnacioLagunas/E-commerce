@@ -28,8 +28,7 @@ class ProductManager {
   async addProduct(product) {
     const products = await this.getProducts();
     if (!Object.values(product).every((value) => value)) {
-      console.log('Existen campos de producto por rellenar');
-      return;
+      throw new Error('Existen campos de producto por rellenar');
     }
     product = {
       id: products.length ? products[products.length - 1].id + 1 : 1,
@@ -40,10 +39,11 @@ class ProductManager {
   }
 
   async updateProduct(id, updatedProduct) {
+    console.log({ updatedProduct });
     const products = await this.getProducts();
     const productIndex = products.findIndex((prod) => prod.id === id);
     if (productIndex < 0) {
-      return null;
+      throw new Error('Producto no encontrado');
     }
     const newProduct = { ...products[productIndex], ...updatedProduct };
     products[productIndex] = newProduct;

@@ -6,18 +6,26 @@ class CartsManager {
     this.path = './src/archivos/carts.json';
   }
 
-  async getCarts(cartId = null) {
+  async getCarts() {
     if (!fs.existsSync(this.path)) {
       await fs.promises.writeFile(this.path, JSON.stringify([]));
     }
     const carts = JSON.parse(await fs.promises.readFile(this.path, 'utf-8'));
-    if (cartId) {
-      const cart = carts.find((cart) => cart.id === cartId);
-      if (!cart) throw new Error(`El carrito id:${cartId} no existe.`);
-      return cart;
-    } else {
-      return carts;
-    }
+    return carts;
+  }
+
+  async getCart(cartId) {
+    const carts = await this.getCarts();
+    const cart = carts.find((cart) => cart.id === cartId);
+    if (!cart) throw new Error(`El carrito id:${cartId} no existe.`);
+    const pm = new ProductsManager();
+    let productsList = cart.products.map(async (product) => {
+      return {
+        product: await pm.getProductById(product.id),
+        cantidad: product.qtty,
+      };
+    });
+    return await Promise.all(productsList);
   }
 
   async createCart() {
@@ -53,11 +61,11 @@ class CartsManager {
     this.saveCarts(carts);
   }
 
-  async deleteProduct(id) {
-    const products = await this.getProducts();
-    const filteredList = products.filter((prod) => prod.id != id);
-    this.saveProducts(filteredList);
-  }
+  // async deleteProduct(id) {
+  //   const products = await this.getProducts();
+  //   const filteredList = products.filter((prod) => prod.id != id);
+  //   this.saveProducts(filteredList);
+  // }
 
   async saveCarts(carts) {
     await fs.promises.writeFile(this.path, JSON.stringify(carts));

@@ -18,8 +18,8 @@ app.set('view engine', 'handlebars');
 // Rutas
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
-app.use('/api/users', usersRouter);
 app.use('/api/views', viewsRouter);
+// app.use('/api/users', usersRouter);
 
 app.listen(8080, () => {
   console.log('Escuchando al puerto 8080...');
