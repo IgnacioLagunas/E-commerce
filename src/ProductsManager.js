@@ -13,7 +13,6 @@ class ProductManager {
       const products = JSON.parse(
         await fs.promises.readFile(this.path, 'utf-8')
       );
-      console.log(products);
       return products;
     } catch (error) {
       console.log(error);
