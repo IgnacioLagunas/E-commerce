@@ -1,65 +1,49 @@
 import { Router } from 'express';
-import ProductManager from '../ProductsManager.js';
+import ProductManager from '../managers/ProductsManager.js';
 const pm = new ProductManager();
 
 const router = Router();
 
 router.get('/', async (req, res) => {
-  const { limit } = req.query;
-  const products = await pm.getProducts();
-  limit ? res.json(products.slice(0, limit)) : res.json(products);
+  try {
+    const products = await pm.findAll();
+    res.status(200).json({ message: 'Products: ', products });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 router.get('/:id', async (req, res) => {
-  const product = await pm.getProductById(+req.params.id);
-  res.json(product);
+  try {
+    const { id } = req.params;
+    const product = await pm.findProduct(id);
+    res.status(200).json({ message: 'Product found', product });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 router.post('/', async (req, res) => {
+  const { name, price } = req.body;
+  if ((!name, !price)) {
+    res.status(400).json({ message: 'missing data' });
+  }
   try {
-    await pm.addProduct(req.body);
-    res.json({ message: 'Producto agregado con exito' });
+    const createdProduct = await pm.createProduct(req.body);
+    res.status(200).json({ message: 'Product created', createdProduct });
   } catch (error) {
-    res.json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
-router.put('/:pid', async (req, res) => {
-  const {
-    params: { pid },
-  } = req;
+router.delete('/:id', async (req, res) => {
   try {
-    const productoEditado = await pm.updateProduct(+pid, req.body);
-    res.json({
-      message: 'Producto editado con exito',
-      producto: productoEditado,
-    });
+    const { id } = req.params;
+    const productDeleted = await pm.deleteProduct(id);
+    res.status(200).json({ message: 'Product deleted', productDeleted });
   } catch (error) {
-    res.json({ message: error.message });
-  }
-});
-
-router.delete('/:pid', async (req, res) => {
-  const {
-    params: { pid },
-  } = req;
-  try {
-    await pm.deleteProduct(pid);
-    res.json({ message: 'Producto eliminado con exito' });
-  } catch (error) {
-    res.json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
 export default router;
-
-/* {
-  title: 'Producto prueba',
-  desc: 'descripcion',
-  price: 20000,
-  thumb: [],
-  stock: 30,
-  code: 'P123'
-  status: true,
-  category: 'TEST'
-}*/

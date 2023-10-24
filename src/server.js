@@ -6,6 +6,9 @@ import usersRouter from './routes/users.router.js';
 import viewsRouter from './routes/views.router.js';
 import { __dirname } from './utils.js';
 
+// Conección con db
+import './db/configDB.js';
+
 const app = express();
 app.use(express.json());
 app.use(express.static(__dirname + '/public'));
@@ -19,7 +22,7 @@ app.set('view engine', 'handlebars');
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/api/views', viewsRouter);
-// app.use('/api/users', usersRouter);
+app.use('/api/users', usersRouter);
 
 app.listen(8080, () => {
   console.log('Escuchando al puerto 8080...');

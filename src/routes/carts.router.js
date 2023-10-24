@@ -1,35 +1,42 @@
 import { Router } from 'express';
-import CartsManager from '../CartsManager.js';
-
-const router = new Router();
+import CartsManager from '../managers/CartsManager.js';
 const cm = new CartsManager();
 
-router.get('/', async (req, res) => {
-  res.json(await cm.getCarts());
-});
+const router = Router();
 
-router.get('/:cid', async (req, res) => {
+router.get('/:cartId', async (req, res) => {
+  const { cartId } = req.params;
   try {
-    res.json(await cm.getCart(+req.params.cid));
+    const cart = await cm.findCartById(cartId);
+    res.status(200).json({
+      message: 'cart found',
+      cart,
+    });
   } catch (error) {
-    res.json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
 router.post('/', async (req, res) => {
-  await cm.createCart();
-  res.json({ message: 'Carrito creado con exito' });
+  try {
+    await cm.createCart();
+    res.status(200).json({
+      message: 'cart created',
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
-router.post('/:cid/product/:pid', async (req, res) => {
-  const {
-    params: { cid, pid },
-  } = req;
+router.put('/:cartId/product/:productId', async (req, res) => {
+  const { cartId, productId } = req.params;
   try {
-    await cm.addProductToCart(+cid, +pid);
-    res.json({ message: 'Producto agregado con exito' });
+    await cm.addProductToCart(cartId, productId);
+    res.status(200).json({
+      message: 'Product added to cart',
+    });
   } catch (error) {
-    res.json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
