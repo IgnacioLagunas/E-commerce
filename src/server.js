@@ -21,7 +21,7 @@ app.set('view engine', 'handlebars');
 // Rutas
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
-app.use('/api/views', viewsRouter);
+app.use('/', viewsRouter);
 app.use('/api/users', usersRouter);
 
 app.listen(8080, () => {

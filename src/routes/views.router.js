@@ -2,8 +2,8 @@ import { Router } from 'express';
 
 const router = Router();
 
-router.get('/view1', (req, res) => {
-  res.render('view1');
+router.get('/home', (req, res) => {
+  res.render('home');
 });
 
 router.get('/user', (req, res) => {
