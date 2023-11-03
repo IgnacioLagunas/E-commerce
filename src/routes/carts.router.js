@@ -19,9 +19,10 @@ router.get('/:cartId', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    await cm.createCart();
+    const result = await cm.createCart();
     res.status(200).json({
       message: 'cart created',
+      cart: result,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -40,4 +41,16 @@ router.put('/:cartId/product/:productId', async (req, res) => {
   }
 });
 
+router.delete('/:cartId', async (req, res) => {
+  const { cartId } = req.params;
+  try {
+    const result = await cm.clearCart(cartId);
+    res.status(200).json({
+      message: 'cart cleared.',
+      cart: result,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 export default router;

@@ -6,8 +6,8 @@ router.get('/home', (req, res) => {
   res.render('home');
 });
 
-router.get('/user', (req, res) => {
-  res.render('view2');
+router.get('/cart', (req, res) => {
+  res.render('cart');
 });
 
 export default router;
