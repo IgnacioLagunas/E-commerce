@@ -5,9 +5,23 @@ const pm = new ProductManager();
 const router = Router();
 
 router.get('/', async (req, res) => {
+  let { limit, page, sort, query } = req.query;
+  console.log({ sort });
+  if (!['asc', 'desc'].includes(sort)) sort = null;
   try {
-    const products = await pm.findAll();
-    res.status(200).json({ message: 'Products: ', products });
+    const products = await pm.findAll({ limit, page, sort, query });
+    res.status(200).json({
+      message: 'Products: ',
+      products: {
+        ...products,
+        nextLink: products.hasNextPage
+          ? `http://localhost:8080/api/products?limit=${limit}&sort=${sort}&page=${products.nextPage}`
+          : null,
+        prevLink: products.hasPrevPage
+          ? `http://localhost:8080/api/products?limit=${limit}&sort=${sort}&page=${products.prevPage}`
+          : null,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

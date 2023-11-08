@@ -19,3 +19,14 @@ body{
 .product img{
     height: 200px;
 }
+.detailed_product_container{
+    margin-top: 70px;
+    max-width: 1000px;
+    display: flex;
+    column-gap: 30px;
+}
+
+.detailed_product_container img{
+    max-width: 200px;
+}
+

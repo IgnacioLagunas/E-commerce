@@ -31,8 +31,9 @@ router.post('/', async (req, res) => {
 
 router.put('/:cartId/product/:productId', async (req, res) => {
   const { cartId, productId } = req.params;
+  const { qtty = 1 } = req.query;
   try {
-    await cm.addProductToCart(cartId, productId);
+    await cm.addOrRemoveFromCart(cartId, productId, qtty);
     res.status(200).json({
       message: 'Product added to cart',
     });
@@ -46,8 +47,20 @@ router.delete('/:cartId', async (req, res) => {
   try {
     const result = await cm.clearCart(cartId);
     res.status(200).json({
-      message: 'cart cleared.',
+      message: 'Cart cleared.',
       cart: result,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.delete('/:cartId/product/:productId', async (req, res) => {
+  const { cartId, productId } = req.params;
+  try {
+    await cm.deleteProductFromCart(cartId, productId);
+    res.status(200).json({
+      message: 'Product deleted from cart',
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

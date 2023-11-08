@@ -1,8 +1,13 @@
 import { productModel } from '../db/models/product.model.js';
 
 class ProductManager {
-  async findAll() {
-    const result = await productModel.find();
+  async findAll(params) {
+    const { limit = 10, sort = null, page = 1, query = {} } = params;
+    const result = await productModel.paginate(query, {
+      limit,
+      page,
+      sort: sort ? { price: sort } : null,
+    });
     return result;
   }
 
