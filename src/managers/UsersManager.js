@@ -6,7 +6,7 @@ class UsersManager {
     return result;
   }
 
-  async createUser(obj) {
+  async createOne(obj) {
     const result = await userModel.create(obj);
     return result;
   }
@@ -23,6 +23,11 @@ class UsersManager {
 
   async findUser(id) {
     const result = await userModel.findById(id);
+    return result;
+  }
+
+  async findUserByEmail(email) {
+    const result = await userModel.findOne({ email });
     return result;
   }
 }

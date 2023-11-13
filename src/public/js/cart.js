@@ -53,7 +53,7 @@ const addEventToBtns = () => {
   });
   removeFromCartBtn.forEach((btn) => {
     btn.onclick = ({ target }) => {
-      deleteFromCart(target.getAttribute('data-id'));
+      deleteWholeProductFromCart(target.getAttribute('data-id'));
     };
   });
 };
