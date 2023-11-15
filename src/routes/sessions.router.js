@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import passport from '../passport.js';
+import { generateToken } from '../utils.js';
 import UsersManager from '../managers/UsersManager.js';
 
 const usersManager = new UsersManager();
@@ -17,9 +19,14 @@ router.post('/signup', async (req, res) => {
     await usersManager.createOne({
       ...req.body,
       role,
+      origin: 'NONE',
     });
-    req.session.user = { email, first_name, last_name, role };
-    res.redirect('/home');
+    // -- Con sessions --
+    // req.session.user = { email, first_name, last_name, role };
+
+    // -- Con jwt --
+    const token = generateToken({ email, first_name, last_name });
+    res.json('token', token);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -33,8 +40,17 @@ router.post('/login', async (req, res) => {
   try {
     const user = await usersManager.findUserByEmail(email);
     if (!user) return res.redirect('/signup');
-    req.session.user = { email, first_name: user.first_name, role: user.role };
-    res.redirect('/home');
+    // -- Con sessions --
+    // req.session.user = { email, first_name: user.first_name, role: user.role };
+    // res.redirect('/home');
+
+    // -- Con jwt --
+    const token = generateToken({
+      email,
+      first_name: user.first_name,
+      last_name: user.last_name,
+    });
+    return res.status(200).json({ token });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -44,5 +60,23 @@ router.get('/signout', async (req, res) => {
     res.redirect('/login');
   });
 });
+
+// SIGNUP - LOGIN- GOOGLE
+
+router.get(
+  '/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+router.get(
+  '/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/error' }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    console.log('Autenticacion exitosa');
+    console.log('req.user en router.get auth: ', req.user);
+    res.redirect('/home');
+  }
+);
 
 export default router;

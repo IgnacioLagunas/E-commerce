@@ -5,8 +5,8 @@ const pm = new ProductManager();
 const router = Router();
 
 router.get('/home', (req, res) => {
-  if (!req.session.user) return res.redirect('/login');
-  res.render('home', { ...req.session.user });
+  if (!req.session.passport.user) return res.redirect('/login');
+  // res.render('home', { ...req.user });
 });
 
 router.get('/product/:productId', async (req, res) => {
