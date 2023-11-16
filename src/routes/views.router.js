@@ -1,12 +1,12 @@
 import { Router } from 'express';
+import { isLogedMiddleware } from '../middleware/auth.middleware.js';
 import ProductManager from '../managers/ProductsManager.js';
 const pm = new ProductManager();
 
 const router = Router();
 
-router.get('/home', (req, res) => {
-  if (!req.session.passport.user) return res.redirect('/login');
-  // res.render('home', { ...req.user });
+router.get('/home', isLogedMiddleware, (req, res) => {
+  res.render('home', req.user);
 });
 
 router.get('/product/:productId', async (req, res) => {

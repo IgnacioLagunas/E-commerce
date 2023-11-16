@@ -6,6 +6,7 @@ import usersRouter from './routes/users.router.js';
 import viewsRouter from './routes/views.router.js';
 import sessionsRouter from './routes/sessions.router.js';
 import { __dirname } from './utils.js';
+import passport from 'passport';
 // Sessions -- mongo
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
@@ -27,10 +28,14 @@ app.use(
       mongoUrl: URI,
     }),
     secret: 'secreto',
+    resave: false,
     saveUninitialized: false,
     cookie: { maxAge: 120000 },
   })
 );
+//Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 //Handlebars
 app.engine('handlebars', engine());

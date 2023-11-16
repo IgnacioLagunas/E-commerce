@@ -21,13 +21,13 @@ class UsersManager {
     return result;
   }
 
-  async findUser(id) {
+  async findOne(id) {
     const result = await userModel.findById(id);
     return result;
   }
 
   async findUserByEmail(email) {
-    const result = await userModel.findOne({ email });
+    const result = await userModel.findOne({ email: email.toLowerCase() });
     return result;
   }
 }

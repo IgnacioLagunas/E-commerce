@@ -24,7 +24,8 @@ const userSchema = new mongoose.Schema({
   origin: {
     type: String,
     required: true,
-    enum: ['GOOGLE', 'NONE'],
+    enum: ['GOOGLE', 'GITHUB', 'NONE'],
+    default: 'NONE',
   },
 });
 
