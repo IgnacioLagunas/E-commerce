@@ -4,6 +4,7 @@ import { Strategy as GitHubStrategy } from 'passport-github2';
 import { Strategy as LocalStrategy } from 'passport-local';
 // import { ExtractJwt, Strategy as JWTStrategy } from 'passport-jwt';
 import UsersManager from './managers/UsersManager.js';
+import { createHash, isPasswordValid } from './utils.js';
 const Users = new UsersManager();
 
 // Estrategia local
@@ -16,11 +17,10 @@ passport.use(
       try {
         const user = await Users.findUserByEmail(username);
         if (!user) {
-          return done(null, false);
+          return done(null, false, { message: 'User not found' });
         }
         // Logica de verificacion de password
-        const passwordVerified = true;
-        if (!passwordVerified) {
+        if (!isPasswordValid(user, password)) {
           return done(null, false);
         }
         return done(null, user);
@@ -52,7 +52,7 @@ passport.use(
           first_name,
           last_name,
           email: username.toLowerCase(),
-          password,
+          password: createHash(password),
         });
         return done(null, newUser);
       } catch (error) {
