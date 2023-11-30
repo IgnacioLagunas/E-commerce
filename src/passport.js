@@ -91,7 +91,7 @@ passport.use(
             first_name,
             last_name,
             email: email.toLowerCase(),
-            origin: 'GOOGLE',
+            // origin: 'GOOGLE',
           });
           done(null, newUser);
         } else done(null, userInDB);

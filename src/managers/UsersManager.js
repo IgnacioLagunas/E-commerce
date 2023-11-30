@@ -1,4 +1,6 @@
 import { userModel } from '../db/models/user.model.js';
+import CartsManager from './CartsManager.js';
+const Carts = new CartsManager();
 
 class UsersManager {
   async findAll() {
@@ -7,7 +9,10 @@ class UsersManager {
   }
 
   async createOne(obj) {
-    const result = await userModel.create(obj);
+    const { _id } = await Carts.createOne();
+    const newUser = { ...obj, cart: _id };
+    console.log({ newUser });
+    const result = await userModel.create({ ...obj, cart: _id });
     return result;
   }
 

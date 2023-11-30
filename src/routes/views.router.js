@@ -15,7 +15,7 @@ router.get('/product/:productId', async (req, res) => {
   res.render('product', product);
 });
 
-router.get('/cart', (req, res) => {
+router.get('/cart', isLogedMiddleware, (req, res) => {
   res.render('cart');
 });
 

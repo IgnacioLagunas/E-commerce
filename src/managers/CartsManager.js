@@ -7,7 +7,7 @@ class CartsManager {
     return result;
   }
 
-  async createCart() {
+  async createOne() {
     const newCart = { products: [] };
     const result = await cartModel.create(newCart);
     return result;

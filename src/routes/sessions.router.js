@@ -7,6 +7,10 @@ const usersManager = new UsersManager();
 
 const router = Router();
 
+router.get('/current', (req, res) => {
+  res.json({ user: req.user });
+});
+
 router.post(
   '/login',
   passport.authenticate('login', {

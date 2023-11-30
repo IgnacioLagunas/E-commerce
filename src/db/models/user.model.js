@@ -22,11 +22,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'user',
   },
-  origin: {
-    type: String,
-    required: true,
-    enum: ['GOOGLE', 'GITHUB', 'NONE'],
-    default: 'NONE',
+  cart: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'Carts',
   },
 });
 

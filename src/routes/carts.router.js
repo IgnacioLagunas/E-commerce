@@ -19,7 +19,7 @@ router.get('/:cartId', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const result = await cm.createCart();
+    const result = await cm.createOne();
     res.status(200).json({
       message: 'cart created',
       cart: result,

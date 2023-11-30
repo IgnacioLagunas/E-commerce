@@ -1,7 +1,7 @@
 export const isLogedMiddleware = (req, res, next) => {
   // Logica de verificacion de usuario
-  console.log('user:', req.session);
-  if (!req.session.passport) return res.redirect('/login');
+  console.log('user:', req.user);
+  if (!req.user) return res.redirect('/login');
   next();
 };
 
