@@ -119,6 +119,11 @@ passport.use(
       const { email, name } = profile._json;
       console.log({ name: name.split(' '), email });
       try {
+        if (!email)
+          return done(null, null, {
+            message:
+              'Email no encontrado. Por favor revise su configuración de github para permitir a la app la recuperación de email o intente registrarse mediante otro método!',
+          });
         const user = await Users.findUserByEmail(email);
         if (!user) {
           const [first_name, last_name] = name.split(' ');
@@ -127,7 +132,6 @@ passport.use(
             first_name,
             last_name,
             email,
-            origin: 'GITHUB',
           });
           return done(null, newUser);
         } else return done(null, user);

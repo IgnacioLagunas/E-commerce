@@ -20,11 +20,17 @@ router.get('/cart', isLogedMiddleware, (req, res) => {
 });
 
 router.get('/login', (req, res) => {
-  if (req.session.user) return res.redirect('/home');
-  res.render('login');
+  console.log(req.session);
+  if (req.user) return res.redirect('/home');
+  const message = req.session.messages
+    ? req.session.messages[req.session.messages.length - 1]
+    : '';
+  res.render('login', {
+    message,
+  });
 });
 router.get('/signup', (req, res) => {
-  if (req.session.user) return res.redirect('/home');
+  if (req.user) return res.redirect('/home');
   res.render('signup');
 });
 // router.get('/profile', (req, res) => {

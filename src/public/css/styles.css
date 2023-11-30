@@ -33,9 +33,11 @@ body{
 
 .login-container {
     text-align: center;
-    width: 400px;
+    width: 100%;
     padding: 20px;
     border-radius: 5px;
+    display: flex;
+    flex-direction: column;
 }
 
 .login-container h2 {
@@ -76,4 +78,10 @@ body{
 .login-container p {
     text-align: left;
     width: 100%;
+}
+
+.login-container span {
+    text-align: left;
+    width: 100%;
+    font-weight: 700;
 }
