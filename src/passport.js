@@ -116,7 +116,9 @@ passport.use(
       callbackURL: 'http://localhost:8080/api/sessions/auth/github/callback',
     },
     async (accessToken, refreshToken, profile, done) => {
-      const { email, name } = profile._json;
+      console.log(profile.emails);
+      const { emails, displayName: name } = profile;
+      const email = emails[0].value;
       console.log({ name: name.split(' '), email });
       try {
         if (!email)
