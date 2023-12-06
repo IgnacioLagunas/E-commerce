@@ -27,7 +27,7 @@ class UsersManager {
   }
 
   async findOne(id) {
-    const result = await userModel.findById(id);
+    const result = await userModel.findById(id).populate('cart');
     return result;
   }
 

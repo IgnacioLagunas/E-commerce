@@ -116,16 +116,16 @@ passport.use(
       callbackURL: 'http://localhost:8080/api/sessions/auth/github/callback',
     },
     async (accessToken, refreshToken, profile, done) => {
-      console.log(profile.emails);
-      const { emails, displayName: name } = profile;
+      console.log({ profile });
+      const { displayName: name, emails } = profile;
+      if (!emails || emails.length == 0) {
+        return done(null, null, {
+          message:
+            'Email no encontrado. Por favor revise su configuración de github para permitir a la app la recuperación de email o intente registrarse mediante otro método!',
+        });
+      }
       const email = emails[0].value;
-      console.log({ name: name.split(' '), email });
       try {
-        if (!email)
-          return done(null, null, {
-            message:
-              'Email no encontrado. Por favor revise su configuración de github para permitir a la app la recuperación de email o intente registrarse mediante otro método!',
-          });
         const user = await Users.findUserByEmail(email);
         if (!user) {
           const [first_name, last_name] = name.split(' ');
