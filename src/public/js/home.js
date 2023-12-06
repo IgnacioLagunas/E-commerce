@@ -59,7 +59,9 @@ const addEventToDetailsBtns = () => {
 const addToCart = async (productId) => {
   const {
     data: {
-      user: { cart: cartId },
+      user: {
+        cart: { _id: cartId },
+      },
     },
   } = await axios.get(`http://localhost:8080/api/sessions/current`);
   await axios.put(

@@ -4,7 +4,9 @@ const getCart = async () => {
   productsContainer.innerHTML = '';
   const {
     data: {
-      user: { cart: cartId },
+      user: {
+        cart: { _id: cartId },
+      },
     },
   } = await axios.get(`http://localhost:8080/api/sessions/current`);
   if (cartId) {
@@ -37,7 +39,7 @@ const createProductDiv = (product, quantity) => {
               <button class="plusOneToCart" data-id="${product._id}">+</button>
               <button class="removeFromCart" data-id="${
                 product._id
-              }">Delete product</button>
+              }">Delete</button>
             </li>`;
 };
 
@@ -65,7 +67,9 @@ const addEventToBtns = () => {
 const addOrRemoveFromCart = async (productId, qtty = 1) => {
   const {
     data: {
-      user: { cart: cartId },
+      user: {
+        cart: { _id: cartId },
+      },
     },
   } = await axios.get(`http://localhost:8080/api/sessions/current`);
   await axios.put(
@@ -75,14 +79,14 @@ const addOrRemoveFromCart = async (productId, qtty = 1) => {
 };
 
 const deleteWholeProductFromCart = async (productId) => {
-  const cartId = localStorage.getItem('cart');
-  if (!cartId) {
-    const {
-      data: { cart },
-    } = await axios.post(`http://localhost:8080/api/carts/`);
-    console.log('carrito creado', { cart });
-    localStorage.setItem('cart', cart._id);
-  }
+  const {
+    data: {
+      user: {
+        cart: { _id: cartId },
+      },
+    },
+  } = await axios.get(`http://localhost:8080/api/sessions/current`);
+  console.log(cartId);
   await axios.delete(
     `http://localhost:8080/api/carts/${cartId}/product/${productId}`
   );
