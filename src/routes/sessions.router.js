@@ -1,15 +1,10 @@
 import { Router } from 'express';
 import passport from '../passport.js';
-import { generateToken } from '../utils.js';
-import UsersManager from '../managers/UsersManager.js';
-
-const usersManager = new UsersManager();
+import SessionsController from '../controllers/sessions.controller.js';
 
 const router = Router();
 
-router.get('/current', (req, res) => {
-  res.json({ user: req.user });
-});
+router.get('/current', SessionsController.getCurrent);
 
 router.post(
   '/login',
@@ -37,8 +32,7 @@ router.get(
 router.get(
   '/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/error' }),
-  function (req, res) {
-    // Successful authentication, redirect home.
+  (req, res) => {
     console.log('Autenticacion exitosa');
     res.redirect('/home');
   }

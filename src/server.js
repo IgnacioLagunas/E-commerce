@@ -6,13 +6,14 @@ import usersRouter from './routes/users.router.js';
 import viewsRouter from './routes/views.router.js';
 import sessionsRouter from './routes/sessions.router.js';
 import { __dirname } from './utils.js';
+import config from './config/config.js';
 import passport from 'passport';
 // Sessions -- mongo
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 
 // Conección con db
-import './db/configDB.js';
+import './config/config.db.js';
 
 const app = express();
 app.use(express.json());
@@ -20,14 +21,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/public'));
 
 // sessions - mongo connect
-const URI =
-  'mongodb+srv://IgnacioLagunas:ignacioLagunas@cluster0.tw5jc.mongodb.net/Coderhouse?retryWrites=true&w=majority';
+
 app.use(
   session({
     store: new MongoStore({
-      mongoUrl: URI,
+      mongoUrl: config.DB_URI,
     }),
-    secret: 'secreto',
+    secret: config.DB_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: { maxAge: 1200000 },
@@ -49,6 +49,6 @@ app.use('/', viewsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/sessions', sessionsRouter);
 
-app.listen(8080, () => {
+app.listen(config.PORT, () => {
   console.log('Escuchando al puerto 8080...');
 });

@@ -1,38 +1,18 @@
 import { Router } from 'express';
 import { isLogedMiddleware } from '../middleware/auth.middleware.js';
-import ProductManager from '../managers/ProductsManager.js';
-const pm = new ProductManager();
+import ViewsController from '../controllers/views.controller.js';
 
 const router = Router();
 
-router.get('/home', isLogedMiddleware, (req, res) => {
-  res.render('home', req.user);
-});
+router.get('/home', isLogedMiddleware, ViewsController.renderViewHome);
 
-router.get('/product/:productId', async (req, res) => {
-  const { productId } = req.params;
-  const product = await pm.findProduct(productId);
-  res.render('product', product);
-});
+router.get('/product/:productId', ViewsController.renderViewProduct);
 
-router.get('/cart', isLogedMiddleware, (req, res) => {
-  res.render('cart');
-});
+router.get('/cart', isLogedMiddleware, ViewsController.renderViewCart);
 
-router.get('/login', (req, res) => {
-  console.log(req.session);
-  if (req.user) return res.redirect('/home');
-  const message = req.session.messages
-    ? req.session.messages[req.session.messages.length - 1]
-    : '';
-  res.render('login', {
-    message,
-  });
-});
-router.get('/signup', (req, res) => {
-  if (req.user) return res.redirect('/home');
-  res.render('signup');
-});
+router.get('/login', ViewsController.renderViewLogin);
+
+router.get('/signup', ViewsController.renderViewSignup);
 // router.get('/profile', (req, res) => {
 //   if (!req.session.user) return res.redirect('/login');
 //   res.render('profile', { ...req.session.user });

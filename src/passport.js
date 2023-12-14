@@ -2,10 +2,9 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as GitHubStrategy } from 'passport-github2';
 import { Strategy as LocalStrategy } from 'passport-local';
-// import { ExtractJwt, Strategy as JWTStrategy } from 'passport-jwt';
-import UsersManager from './managers/UsersManager.js';
+import UsersService from './services/users.service.js';
 import { createHash, isPasswordValid } from './utils.js';
-const Users = new UsersManager();
+import config from './config/config.js';
 
 // Estrategia local
 
@@ -15,7 +14,7 @@ passport.use(
     { usernameField: 'email' },
     async (username, password, done) => {
       try {
-        const user = await Users.findUserByEmail(username);
+        const user = await UsersService.findOneByEmail(username);
         if (!user) {
           return done(null, false, { message: 'User not found' });
         }
@@ -41,14 +40,14 @@ passport.use(
         return done(null, false, { message: 'Faltan datos por llenar' });
       }
       try {
-        const user = await Users.findUserByEmail(username);
+        const user = await UsersService.findOneByEmail(username);
         if (user) {
           return done(null, false, {
             message: `Ya existe un usuario registrado con el mail ${username}`,
           });
         }
         // Logica de hasheo de password //////
-        const newUser = await Users.createOne({
+        const newUser = await UsersService.createOne({
           first_name,
           last_name,
           email: username.toLowerCase(),
@@ -64,30 +63,27 @@ passport.use(
 
 // Google - passport
 
-const GOOGLE_CLIENT_ID =
-  '282153551748-4sj4od3lgrmbsf32690cdt3is3s0ti32.apps.googleusercontent.com';
-const GOOGLE_CLIENT_SECRET = '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';
-
 passport.use(
   'google',
   new GoogleStrategy(
     {
-      clientID: GOOGLE_CLIENT_ID,
-      clientSecret: GOOGLE_CLIENT_SECRET,
+      clientID: config.GOOGLE_CLIENT_ID,
+      clientSecret: config.GOOGLE_CLIENT_SECRET,
       callbackURL: 'http://localhost:8080/api/sessions/auth/google/callback',
     },
     async function (accessToken, refreshToken, profile, done) {
       // Al resolver el callback, si todo sale bien con google se implementa esta logica
       const { _json: googleUser } = profile;
       try {
-        const userInDB = await Users.findUserByEmail(googleUser.email);
+        const userInDB = await UsersService.findOneByEmail(googleUser.email);
+        console.log('aca');
         if (!userInDB) {
           const {
             given_name: first_name,
             family_name: last_name,
             email,
           } = googleUser;
-          const newUser = await Users.createOne({
+          const newUser = await UsersService.createOne({
             first_name,
             last_name,
             email: email.toLowerCase(),
@@ -104,15 +100,12 @@ passport.use(
 
 // GitHub-Passport Strategy
 
-const GITHUB_CLIENT_ID = '10b589c20a3c5b263ff8';
-const GITHUB_CLIENT_SECRET = 'e088e78370e9c8621ab62db36fc29b40b8c23d94';
-
 passport.use(
   'github',
   new GitHubStrategy(
     {
-      clientID: GITHUB_CLIENT_ID,
-      clientSecret: GITHUB_CLIENT_SECRET,
+      clientID: config.GITHUB_CLIENT_ID,
+      clientSecret: config.GITHUB_CLIENT_SECRET,
       callbackURL: 'http://localhost:8080/api/sessions/auth/github/callback',
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -126,11 +119,11 @@ passport.use(
       }
       const email = emails[0].value;
       try {
-        const user = await Users.findUserByEmail(email);
+        const user = await UsersService.findOneByEmail(email);
         if (!user) {
           const [first_name, last_name] = name.split(' ');
           console.log({ first_name, last_name });
-          const newUser = await Users.createOne({
+          const newUser = await UsersService.createOne({
             first_name,
             last_name,
             email,
@@ -171,7 +164,7 @@ passport.serializeUser(function (user, done) {
 //
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await Users.findOne(id);
+    const user = await UsersService.findOne(id);
     done(null, user);
   } catch (error) {
     done(error);
