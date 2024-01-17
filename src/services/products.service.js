@@ -1,12 +1,16 @@
-import ProductsMongo from '../data-access/daos/products.dao.js';
+import ProductsDao from '../data-access/daos/products.dao.js';
 
 class ProductsService {
+  constructor(ProductsDao) {
+    this.productsDao = ProductsDao;
+  }
+
   async getAll() {
-    return await ProductsMongo.getAll();
+    return await this.productsDao.getAll();
   }
   async getAllwithParams(params) {
     const { limit = 10, sort = null, page = 1, query = {} } = params;
-    const result = await ProductsMongo.getAllwithParams(
+    const result = await this.productsDao.getAllwithParams(
       {
         limit,
         page,
@@ -18,24 +22,24 @@ class ProductsService {
   }
 
   async createOne(obj) {
-    const result = await ProductsMongo.createOne(obj);
+    const result = await this.productsDao.createOne(obj);
     return result;
   }
 
   async updateOne(id, newObj) {
-    const result = await ProductsMongo.updateOne({ _id: id }, newObj);
+    const result = await this.productsDao.updateOne({ _id: id }, newObj);
     return result;
   }
 
   async deleteOne(id) {
-    const result = await ProductsMongo.deleteOne({ _id: id });
+    const result = await this.productsDao.deleteOne({ _id: id });
     return result;
   }
 
   async findOne(id) {
-    const result = await ProductsMongo.findOne(id);
+    const result = await this.productsDao.findOne(id);
     return result;
   }
 }
 
-export default ProductsService = new ProductsService();
+export default ProductsService = new ProductsService(ProductsDao);

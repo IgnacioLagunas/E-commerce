@@ -23,6 +23,10 @@ const productSchema = new mongoose.Schema({
     default:
       'https://www.google.com/url?sa=i&url=https%3A%2F%2Fstock.adobe.com%2Fsearch%2Fimages%3Fk%3Dno%2Bimage%2Bavailable&psig=AOvVaw353-XUks7sdWbHs6uyEF6T&ust=1699055914811000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCJDBht3CpoIDFQAAAAAdAAAAABAE',
   },
+  stock: {
+    type: Number,
+    default: Math.floor(Math.random() * 100) + 1,
+  },
 });
 
 productSchema.plugin(mongoosePaginate);

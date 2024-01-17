@@ -1,32 +1,39 @@
-import UsersMongo from '../data-access/daos/users.dao.js';
-import CartsMongo from '../data-access/daos/carts.dao.js';
+import UsersDao from '../data-access/daos/users.dao.js';
+import CartsService from './carts.service.js';
 
 class UsersService {
+  constructor(UsersDao, CartsService) {
+    this.usersDao = UsersDao;
+    this.cartsService = CartsService;
+  }
   async getAll() {
-    return await UsersMongo.find();
+    return await this.usersDao.getAll();
   }
 
   async createOne(obj) {
-    const { _id } = await CartsMongo.createOne();
+    const { _id } = await this.cartsService.createOne();
     const newUser = { ...obj, cart: _id };
     console.log({ newUser });
-    return await UsersMongo.createOne(newUser);
+    return await this.usersDao.createOne(newUser);
   }
 
   async updateOne(id, newObj) {
-    return await UsersMongo.updateOne({ _id: id }, newObj);
+    const user = await this.findOne(id);
+    const newUser = { ...user._doc, ...newObj };
+    console.log({ newUser });
+    return await this.usersDao.updateOne({ _id: id }, newUser);
   }
 
   async deleteOne(id) {
-    return await UsersMongo.deleteOne({ _id: id });
+    return await this.usersDao.deleteOne({ _id: id });
   }
 
   async findOne(id) {
-    return await UsersMongo.findOne(id);
+    return await this.usersDao.findOne(id);
   }
 
   async findOneByEmail(email) {
-    return await UsersMongo.findByEmail({ email: email.toLowerCase() });
+    return await this.usersDao.findByEmail({ email: email.toLowerCase() });
   }
 }
-export default UsersService = new UsersService();
+export default UsersService = new UsersService(UsersDao, CartsService);

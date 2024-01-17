@@ -1,7 +1,6 @@
 class BasicMongoDAO {
   model;
   constructor(model) {
-    console.log('creando dao basic');
     this.model = model;
   }
 
@@ -14,7 +13,10 @@ class BasicMongoDAO {
   }
 
   async updateOne(id, newObj) {
-    return await this.model.updateOne({ _id: id }, newObj);
+    return await this.model.updateOne({ _id: id }, newObj, {
+      runValidators: true,
+      new: true,
+    });
   }
 
   async deleteOne(id) {

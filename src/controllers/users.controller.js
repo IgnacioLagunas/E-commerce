@@ -33,6 +33,17 @@ class UsersController {
     }
   };
 
+  updateUser = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const update = req.body;
+      await UsersService.updateOne(id, update);
+      res.status(200).json({ message: 'User updated' });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+
   deleteUser = async (req, res) => {
     try {
       const { id } = req.params;
