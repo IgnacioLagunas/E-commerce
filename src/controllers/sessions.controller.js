@@ -1,7 +1,8 @@
 import { UserResponse } from '../data-access/dtos/userDTOs.js';
+import SessionsService from '../services/sessions.service.js';
 class SessionsController {
   getCurrent = (req, res) => {
-    res.json({ user: new UserResponse(req.user) });
+    res.json({ user: SessionsService.getCurrentSession(req) });
   };
 }
 

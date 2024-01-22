@@ -1,4 +1,3 @@
-import config from '../config/config.js';
 import ProductsService from '../services/products.service.js';
 
 class ViewsController {
@@ -17,8 +16,6 @@ class ViewsController {
   };
 
   renderViewLogin = (req, res) => {
-    console.log(req.session);
-    console.log(config.GOOGLE_CLIENT_ID);
     if (req.user) return res.redirect('/home');
     const message = req.session.messages
       ? req.session.messages[req.session.messages.length - 1]

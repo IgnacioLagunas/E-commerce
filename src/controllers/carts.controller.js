@@ -9,7 +9,7 @@ class CartsController {
     try {
       const cart = await this.cartsService.findOne(cartId);
       res.status(200).json({
-        message: 'cart found',
+        message: 'Cart found',
         cart,
       });
     } catch (error) {
@@ -21,7 +21,7 @@ class CartsController {
     try {
       const result = await this.cartsService.createOne();
       res.status(200).json({
-        message: 'cart created',
+        message: 'Cart created',
         cart: result,
       });
     } catch (error) {
@@ -54,6 +54,7 @@ class CartsController {
       res.status(500).json({ message: error.message });
     }
   };
+
   deleteProductFromCart = async (req, res) => {
     const { cartId, productId } = req.params;
     try {
@@ -68,14 +69,21 @@ class CartsController {
 
   purchaseCart = async (req, res) => {
     try {
-      const { cid } = req.params;
-      const ticket = await this.cartsService.purchaseCart(cid);
+      const {
+        params: { cid },
+        user,
+      } = req;
+      const response = await this.cartsService.purchaseCart(cid, user);
       res.status(200).json({
         message: 'Purchase successfull',
-        ticket,
+        response,
       });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      if (error.name === 'CartIsEmptyError') {
+        res.status(400).json({ message: error.message });
+      } else {
+        res.status(500).json({ message: error.message });
+      }
     }
   };
 }

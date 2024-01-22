@@ -8,6 +8,7 @@ class ProductsService {
   async getAll() {
     return await this.productsDao.getAll();
   }
+
   async getAllwithParams(params) {
     const { limit = 10, sort = null, page = 1, query = {} } = params;
     const result = await this.productsDao.getAllwithParams(

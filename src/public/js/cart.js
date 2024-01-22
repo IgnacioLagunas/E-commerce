@@ -1,4 +1,5 @@
 const productsContainer = document.getElementById('cart-products-container');
+const comprarButton = document.getElementById('comprar-button');
 
 const getCart = async () => {
   productsContainer.innerHTML = '';
@@ -16,14 +17,16 @@ const getCart = async () => {
       },
     } = await axios.get(`http://localhost:8080/api/carts/${cartId}`);
     let totalPrice = 0;
-    if (products.length == 0)
+    if (products.length == 0) {
       productsContainer.innerHTML = '<h2>Your cart is empty 😶 </h2>';
-    else {
+      comprarButton.disabled = true;
+    } else {
       products.forEach(({ product, quantity }) => {
         productsContainer.innerHTML += createProductDiv(product, quantity);
         totalPrice += Math.trunc(product.price * quantity);
       });
       productsContainer.innerHTML += `<h3>Total Price: $${totalPrice}</h3>`;
+      comprarButton.disabled = false;
     }
     addEventToBtns();
   }
@@ -62,6 +65,9 @@ const addEventToBtns = () => {
       deleteWholeProductFromCart(target.getAttribute('data-id'));
     };
   });
+  comprarButton.onclick = () => {
+    purchaseCart();
+  };
 };
 
 const addOrRemoveFromCart = async (productId, qtty = 1) => {
@@ -90,6 +96,18 @@ const deleteWholeProductFromCart = async (productId) => {
   await axios.delete(
     `http://localhost:8080/api/carts/${cartId}/product/${productId}`
   );
+  getCart();
+};
+
+const purchaseCart = async () => {
+  const {
+    data: {
+      user: {
+        cart: { _id: cartId },
+      },
+    },
+  } = await axios.get(`http://localhost:8080/api/sessions/current`);
+  await axios.post(`http://localhost:8080/api/carts/${cartId}/purchase`);
   getCart();
 };
 
