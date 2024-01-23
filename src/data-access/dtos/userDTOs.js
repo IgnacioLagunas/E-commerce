@@ -15,7 +15,7 @@ export class UserDB {
     this.email = user.username
       ? user.username.toLowerCase()
       : user.email.toLowerCase();
-    this.password = createHash(user.password);
+    this.password = user.password ? createHash(user.password) : null;
     this.role = user.role;
     this.cart = user.cart;
   }
