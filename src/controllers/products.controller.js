@@ -40,12 +40,12 @@ class ProductsController {
   };
 
   createNewProduct = async (req, res) => {
-    const { name, price } = req.body;
-    if ((!name, !price)) {
-      res.status(400).json({ message: 'missing data' });
-    }
     try {
-      const createdProduct = await ProductsService.createOne(req.body);
+      const owner = req.user.role === 'premium' ? req.user.email : 'admin';
+      const createdProduct = await ProductsService.createOne({
+        ...req.body,
+        owner,
+      });
       res.status(200).json({ message: 'Product created', createdProduct });
     } catch (error) {
       res.status(500).json({ message: error.message });

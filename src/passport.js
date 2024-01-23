@@ -2,9 +2,44 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as GitHubStrategy } from 'passport-github2';
 import { Strategy as LocalStrategy } from 'passport-local';
+import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt';
 import UsersService from './services/users.service.js';
 import { createHash, isPasswordValid } from './utils.js';
 import config from './config/config.js';
+
+// JWT Strategy
+
+const cookieExtractor = (req) => {
+  let token = null;
+  if (req?.cookies) {
+    token = req.cookies['token'];
+  }
+  return token;
+};
+
+let opts = {
+  jwtFromRequest: ExtractJwt.fromExtractors([
+    ExtractJwt.fromAuthHeaderAsBearerToken(),
+    cookieExtractor,
+  ]),
+  secretOrKey: config.JWT_SECRET,
+};
+
+passport.use(
+  new JWTStrategy(opts, async (jwt_payload, done) => {
+    try {
+      const user = await UsersService.findOneByEmail(jwt_payload.email);
+      if (!user) {
+        return done(null, false);
+      }
+      if (user) {
+        return done(null, user);
+      }
+    } catch (error) {
+      return done(error, false);
+    }
+  })
+);
 
 // Estrategia local
 
@@ -16,7 +51,7 @@ passport.use(
       try {
         const user = await UsersService.findOneByEmail(username);
         if (!user) {
-          return done(null, false, { message: 'User not found' });
+          return done(null, false);
         }
         // Logica de verificacion de password
         if (!isPasswordValid(user, password)) {
@@ -35,24 +70,14 @@ passport.use(
   new LocalStrategy(
     { passReqToCallback: true, usernameField: 'email' },
     async (req, username, password, done) => {
-      const { first_name, last_name } = req.body;
-      if ((!first_name, !last_name, !username, !password)) {
-        return done(null, false, { message: 'Faltan datos por llenar' });
-      }
       try {
         const user = await UsersService.findOneByEmail(username);
         if (user) {
           return done(null, false, {
-            message: `Ya existe un usuario registrado con el mail ${username}`,
+            message: `User ${username} already exists.`,
           });
         }
-        // Logica de hasheo de password //////
-        const newUser = await UsersService.createOne({
-          first_name,
-          last_name,
-          email: username.toLowerCase(),
-          password: createHash(password),
-        });
+        const newUser = await UsersService.createOne(req.body);
         return done(null, newUser);
       } catch (error) {
         return done(error);
@@ -137,38 +162,5 @@ passport.use(
     }
   )
 );
-
-// JWT-Passport
-
-// const SECRET_KEY_JWT = 'secretoooo';
-
-// passport.use(
-//   'jwt',
-//   new JWTStrategy(
-//     {
-//       // De donde se extrae el token
-//       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken,
-//       secretOrKey: SECRET_KEY_JWT,
-//     },
-//     (jwt_payload, done) => {
-
-//     }
-//   )
-// );
-
-// Toma el usuario retornado por las estrategias de passport y guarda el email en req.session.passport.user
-passport.serializeUser(function (user, done) {
-  done(null, user._id);
-});
-
-//
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await UsersService.findOne(id);
-    done(null, user);
-  } catch (error) {
-    done(error);
-  }
-});
 
 export default passport;

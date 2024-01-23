@@ -27,6 +27,10 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: Math.floor(Math.random() * 100) + 1,
   },
+  owner: {
+    type: String,
+    default: 'admin',
+  },
 });
 
 productSchema.plugin(mongoosePaginate);

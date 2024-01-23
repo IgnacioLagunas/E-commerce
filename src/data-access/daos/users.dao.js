@@ -14,7 +14,9 @@ class UsersMongo extends BasicMongoDAO {
   }
 
   async findByEmail(email) {
-    return await userModel.findOne(email);
+    return await userModel.findOne(email).populate({
+      path: 'cart',
+    });
   }
 }
 

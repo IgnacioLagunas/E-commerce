@@ -2,6 +2,7 @@ const productsContainer = document.querySelector('#products-container');
 const prevPageBtn = document.querySelector('#prev-page-btn');
 const nextPageBtn = document.querySelector('#next-page-btn');
 const pageNumberSpan = document.querySelector('#page-number-span');
+const signOutButton = document.querySelector('#sign-out-btn');
 
 const getProducts = async (route) => {
   productsContainer.innerHTML = '';
@@ -17,6 +18,7 @@ const getProducts = async (route) => {
   addEventToDetailsBtns();
   addEventToPageBtn(prevPageBtn, prevLink);
   addEventToPageBtn(nextPageBtn, nextLink);
+  addEventToSignOutButton();
   pageNumberSpan.innerHTML = page;
 };
 
@@ -37,6 +39,15 @@ const addEventToPageBtn = (button, link) => {
       getProducts(link);
     };
   }
+};
+const addEventToSignOutButton = () => {
+  function deleteCookie(cookieName) {
+    document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  }
+  signOutButton.onclick = () => {
+    deleteCookie('token');
+    window.location.href = '/login';
+  };
 };
 const addEventToCartBtns = () => {
   const addToCartBtns = document.querySelectorAll('.addToCartBtn');

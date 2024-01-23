@@ -1,14 +1,14 @@
 import { Router } from 'express';
-import { isLogedMiddleware } from '../middleware/auth.middleware.js';
 import ViewsController from '../controllers/views.controller.js';
+import { tokenValidationMiddleware } from '../middleware/jwt.middleware.js';
 
 const router = Router();
 
-router.get('/home', isLogedMiddleware, ViewsController.renderViewHome);
+router.get('/home', tokenValidationMiddleware, ViewsController.renderViewHome);
 
 router.get('/product/:productId', ViewsController.renderViewProduct);
 
-router.get('/cart', isLogedMiddleware, ViewsController.renderViewCart);
+router.get('/cart', tokenValidationMiddleware, ViewsController.renderViewCart);
 
 router.get('/login', ViewsController.renderViewLogin);
 

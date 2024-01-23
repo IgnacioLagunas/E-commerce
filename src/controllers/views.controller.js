@@ -17,12 +17,13 @@ class ViewsController {
 
   renderViewLogin = (req, res) => {
     if (req.user) return res.redirect('/home');
-    const message = req.session.messages
-      ? req.session.messages[req.session.messages.length - 1]
-      : '';
-    res.render('login', {
-      message,
-    });
+    // const message = req.session.messages
+    //   ? req.session.messages[req.session.messages.length - 1]
+    //   : '';
+    // res.render('login', {
+    //   // message,
+    // });
+    res.render('login');
   };
 
   renderViewSignup = (req, res) => {

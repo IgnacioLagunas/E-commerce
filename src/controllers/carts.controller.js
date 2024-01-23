@@ -8,12 +8,12 @@ class CartsController {
     const { cartId } = req.params;
     try {
       const cart = await this.cartsService.findOne(cartId);
-      res.status(200).json({
+      return res.status(200).json({
         message: 'Cart found',
         cart,
       });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({ message: error.message });
     }
   };
 

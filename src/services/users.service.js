@@ -1,4 +1,5 @@
 import UsersDao from '../data-access/daos/users.dao.js';
+import { UserDB } from '../data-access/dtos/userDTOs.js';
 import CartsService from './carts.service.js';
 
 class UsersService {
@@ -11,8 +12,8 @@ class UsersService {
   }
 
   async createOne(obj) {
-    const { _id } = await this.cartsService.createOne();
-    const newUser = { ...obj, cart: _id };
+    const { _id: cart_id } = await this.cartsService.createOne();
+    const newUser = new UserDB({ ...obj, cart: cart_id });
     console.log({ newUser });
     return await this.usersDao.createOne(newUser);
   }

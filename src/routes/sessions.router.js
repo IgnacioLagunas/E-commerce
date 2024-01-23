@@ -1,25 +1,38 @@
 import { Router } from 'express';
 import passport from '../passport.js';
+import {
+  createNewTokenAndSendToCookieMiddleware,
+  tokenValidationMiddleware,
+} from '../middleware/jwt.middleware.js';
+import ViewsController from '../controllers/views.controller.js';
 import SessionsController from '../controllers/sessions.controller.js';
 
 const router = Router();
 
-router.get('/current', SessionsController.getCurrent);
+router.get(
+  '/current',
+  tokenValidationMiddleware,
+  SessionsController.getCurrent
+);
 
 router.post(
   '/login',
   passport.authenticate('login', {
+    session: false,
     failureRedirect: '/login',
-    successRedirect: '/home',
-  })
+  }),
+  createNewTokenAndSendToCookieMiddleware,
+  ViewsController.renderViewHome
 );
 
 router.post(
   '/signup',
   passport.authenticate('signup', {
-    successRedirect: '/home',
-    failureRedirect: '/signup',
-  })
+    session: false,
+    failureRedirect: '/login',
+  }),
+  createNewTokenAndSendToCookieMiddleware,
+  ViewsController.renderViewHome
 );
 
 // SIGNUP - LOGIN- GOOGLE
@@ -31,11 +44,12 @@ router.get(
 
 router.get(
   '/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/error' }),
-  (req, res) => {
-    console.log('Autenticacion exitosa');
-    res.redirect('/home');
-  }
+  passport.authenticate('google', {
+    failureRedirect: '/error',
+    session: false,
+  }),
+  createNewTokenAndSendToCookieMiddleware,
+  ViewsController.renderViewHome
 );
 
 // SIGNUP - LOGIN- GITHUB
@@ -50,18 +64,17 @@ router.get(
   passport.authenticate('github', {
     failureRedirect: '/login',
     failureMessage: true,
+    session: false,
   }),
-  function (req, res) {
-    // Successful authentication, redirect home.
-    res.redirect('/home');
-  }
+  createNewTokenAndSendToCookieMiddleware,
+  ViewsController.renderViewHome
 );
 
 // SIGNOUT
 
-router.get('/signout', async (req, res) => {
-  req.session.destroy(() => {
-    res.redirect('/login');
-  });
-});
+// router.get('/signout', async (req, res) => {
+//   req.session.destroy(() => {
+//     res.redirect('/login');
+//   });
+// });
 export default router;

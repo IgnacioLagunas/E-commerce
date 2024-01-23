@@ -21,11 +21,11 @@ class UsersController {
   };
 
   createNewUser = async (req, res) => {
-    const { first_name, last_name, email } = req.body;
-    if ((!first_name, !last_name, !email)) {
-      res.status(400).json({ message: 'missing data' });
-    }
     try {
+      const { first_name, last_name, email } = req.body;
+      if ((!first_name, !last_name, !email)) {
+        res.status(400).json({ message: 'missing data' });
+      }
       const createdUser = await UsersService.createOne(req.body);
       res.status(200).json({ message: 'User created', createdUser });
     } catch (error) {
