@@ -52,6 +52,18 @@ class ProductsController {
     }
   };
 
+  updateProduct = async (req, res) => {
+    console.log('en controller');
+    try {
+      const { id } = req.params;
+      const update = req.body;
+      const updatedProduct = await ProductsService.updateOne(id, update);
+      res.status(200).json({ message: 'Product updated', updatedProduct });
+    } catch (error) {
+      res.status(error.code || 500).json({ message: error.message });
+    }
+  };
+
   deleteProduct = async (req, res) => {
     try {
       const { id } = req.params;

@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import ProductsController from '../controllers/products.controller.js';
-import { hasAuthorizedRoleMiddleware } from '../middleware/auth.middleware.js';
+import {
+  hasAuthorizedRoleMiddleware,
+  productAuthorizathionMiddleware,
+} from '../middleware/auth.middleware.js';
 import { tokenValidationMiddleware } from '../middleware/jwt.middleware.js';
 
 const router = Router();
@@ -16,6 +19,20 @@ router.post(
   ProductsController.createNewProduct
 );
 
-router.delete('/:id', ProductsController.deleteProduct);
+router.put(
+  '/:id',
+  tokenValidationMiddleware,
+  hasAuthorizedRoleMiddleware(['admin', 'premium']),
+  productAuthorizathionMiddleware,
+  ProductsController.updateProduct
+);
+
+router.delete(
+  '/:id',
+  tokenValidationMiddleware,
+  hasAuthorizedRoleMiddleware(['admin', 'premium']),
+  productAuthorizathionMiddleware,
+  ProductsController.deleteProduct
+);
 
 export default router;

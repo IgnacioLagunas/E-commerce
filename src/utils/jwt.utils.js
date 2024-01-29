@@ -3,13 +3,17 @@ import config from '../config/config.js';
 import { UserJWT } from '../data-access/dtos/userDTOs.js';
 import { Error } from 'mongoose';
 
-export const generateNewToken = (user) => {
+export const generateNewToken = (
+  user,
+  expiresIn = '1h',
+  secret = config.JWT_SECRET
+) => {
   console.log(UserJWT(user));
-  return jwt.sign(UserJWT(user), config.JWT_SECRET, { expiresIn: '1h' });
+  return jwt.sign(UserJWT(user), secret, { expiresIn });
 };
 
-export const verifyToken = (token) => {
-  return jwt.verify(token, config.JWT_SECRET, (err, decoded) => {
+export const verifyToken = (token, secret = config.JWT_SECRET) => {
+  return jwt.verify(token, secret, (err, decoded) => {
     if (err) {
       throw new Error('Could not verify token');
     } else {

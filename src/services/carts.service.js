@@ -74,7 +74,12 @@ class CartsService {
       }
     });
     if (productsInStock.length == 0) {
-      return new CartPurchaseResponse([], null, productsOutOfStock);
+      return new CartPurchaseResponse(
+        [],
+        null,
+        productsOutOfStock,
+        'Products out of stock'
+      );
     }
     console.log(productsInStock);
     const ticket = await TicketsService.createOne(productsInStock, user);

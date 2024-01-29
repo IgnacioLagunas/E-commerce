@@ -1,4 +1,5 @@
 import ProductsDao from '../data-access/daos/products.dao.js';
+import { EntitiyNotFoundError } from '../errors/errors.js';
 
 class ProductsService {
   constructor(ProductsDao) {
@@ -11,13 +12,14 @@ class ProductsService {
 
   async getAllwithParams(params) {
     const { limit = 10, sort = null, page = 1, query = {} } = params;
+    console.log(query);
     const result = await this.productsDao.getAllwithParams(
       {
         limit,
         page,
         sort: sort ? { price: sort } : null,
       },
-      query
+      typeof query === 'string' ? JSON.parse(query) : query
     );
     return result;
   }
@@ -28,8 +30,12 @@ class ProductsService {
   }
 
   async updateOne(id, newObj) {
-    const result = await this.productsDao.updateOne({ _id: id }, newObj);
-    return result;
+    console.log('en service');
+    const product = await this.findOne(id);
+    if (!product) throw new EntitiyNotFoundError('Product');
+    const newProduct = { ...product._doc, ...newObj };
+    console.log({ newProduct });
+    return await this.productsDao.updateOne({ _id: id }, newProduct);
   }
 
   async deleteOne(id) {

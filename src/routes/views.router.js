@@ -13,6 +13,13 @@ router.get('/cart', tokenValidationMiddleware, ViewsController.renderViewCart);
 router.get('/login', ViewsController.renderViewLogin);
 
 router.get('/signup', ViewsController.renderViewSignup);
+
+router.get(
+  '/change-password/:id/:token',
+  ViewsController.renderViewChangePassword
+);
+
+router.get('/forgot-password', ViewsController.renderViewForgotPassword);
 // router.get('/profile', (req, res) => {
 //   if (!req.session.user) return res.redirect('/login');
 //   res.render('profile', { ...req.session.user });

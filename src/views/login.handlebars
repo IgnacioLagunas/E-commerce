@@ -1,4 +1,4 @@
-<div class="login-container">
+<div class="container login-container">
     <form action="/api/sessions/login" method="post">
         <label for="email">Email:</label>
         <input type="text" id="email" name="email" required>
@@ -12,6 +12,7 @@
     <form action="api/sessions/auth/github">
         <input type="submit" value="GITHUB" />
     </form>
+    <p>Has olvidado tu contraseña? <a href="http://localhost:8080/forgot-password">recuperala aquí</a>.</p>
     <p>No cuentas con un usuario? <a href="http://localhost:8080/signup">registrate!</a></p>
     <span>{{message}}</span>
 </div>

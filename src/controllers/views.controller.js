@@ -1,3 +1,4 @@
+import { MissingDataError } from '../errors/errors.js';
 import ProductsService from '../services/products.service.js';
 
 class ViewsController {
@@ -29,6 +30,21 @@ class ViewsController {
   renderViewSignup = (req, res) => {
     if (req.user) return res.redirect('/home');
     res.render('signup');
+  };
+
+  renderViewForgotPassword = (req, res) => {
+    res.render('forgot-password');
+  };
+
+  renderViewChangePassword = (req, res) => {
+    try {
+      if (!req.user) return res.redirect('/login');
+      const { id, token } = req.params;
+      if (!id || !token) throw new MissingDataError();
+      res.render('change-password', { email: req.user.email, id, token });
+    } catch (error) {
+      res.status(error.code || 500).json({ message: error.message });
+    }
   };
 }
 

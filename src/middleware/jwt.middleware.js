@@ -1,4 +1,7 @@
-import { generateNewToken } from '../utils/jwt.utils.js';
+import config from '../config/config.js';
+import { EntitiyNotFoundError, MissingDataError } from '../errors/errors.js';
+import usersService from '../services/users.service.js';
+import { generateNewToken, verifyToken } from '../utils/jwt.utils.js';
 import passport from 'passport';
 
 export const tokenValidationMiddleware = (req, res, next) => {
@@ -23,5 +26,35 @@ export const createNewTokenAndSendToCookieMiddleware = (req, res, next) => {
     next();
   } catch (error) {
     res.status(500).json(error.message);
+  }
+};
+
+// export const putTokenInAuthHeadersMiddleware = (req, res, next) => {
+//   try {
+//     const { token } = req.params;
+//     if (!token) throw new MissingDataError();
+//     req.headers['authorization'] = `Bearer ${token}`;
+//     next();
+//   } catch (error) {
+//     res.status(error.code || 500).json({ message: error.message });
+//   }
+// };
+
+export const checkTokenForPasswordChangeMiddleware = async (req, res, next) => {
+  try {
+    const { token, id } = req.params;
+    if (!token || !id) {
+      throw new MissingDataError();
+    }
+    const user = await usersService.findOne(id);
+    if (!user) {
+      throw new EntitiyNotFoundError(`User with id ${id}`);
+    }
+    const decoded = verifyToken(token, config.JWT_SECRET + user.password || '');
+    console.log('decoded', decoded);
+    req.user = { email: decoded.email };
+    next();
+  } catch (error) {
+    res.status(error.code || 500).json({ message: error.message });
   }
 };

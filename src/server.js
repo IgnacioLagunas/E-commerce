@@ -5,6 +5,7 @@ import cartsRouter from './routes/carts.router.js';
 import usersRouter from './routes/users.router.js';
 import viewsRouter from './routes/views.router.js';
 import sessionsRouter from './routes/sessions.router.js';
+import passwordRouter from './routes/password.router.js';
 import { __dirname } from './utils.js';
 import config from './config/config.js';
 import passport from 'passport';
@@ -13,7 +14,7 @@ import passport from 'passport';
 // import MongoStore from 'connect-mongo';
 
 // Conección con db
-import './config/config.db.js';
+import './config/db.config.js';
 
 const app = express();
 app.use(express.json());
@@ -52,6 +53,7 @@ app.use('/api/carts', cartsRouter);
 app.use('/', viewsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/sessions', sessionsRouter);
+app.use('/api/password', passwordRouter);
 
 app.listen(config.PORT, () => {
   console.log('Escuchando al puerto 8080...');
