@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export default {
+  ENVIROMENT: process.env.NODE_ENV || 'development',
+
   DB_URI: process.env.DB_URI,
   DB_SECRET: process.env.DB_SECRET,
 

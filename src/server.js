@@ -6,6 +6,7 @@ import usersRouter from './routes/users.router.js';
 import viewsRouter from './routes/views.router.js';
 import sessionsRouter from './routes/sessions.router.js';
 import passwordRouter from './routes/password.router.js';
+import testRouter from './routes/tests.router.js';
 import { __dirname } from './utils.js';
 import config from './config/config.js';
 import passport from 'passport';
@@ -23,24 +24,11 @@ app.use(express.static(__dirname + '/public'));
 
 // Cookies (temporalmente)
 import cookieParser from 'cookie-parser';
+import { logger } from './utils/logger.utils.js';
 app.use(cookieParser());
 
-// sessions - mongo connect
-
-// app.use(
-//   session({
-//     store: new MongoStore({
-//       mongoUrl: config.DB_URI,
-//     }),
-//     secret: config.DB_SECRET,
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: { maxAge: 1200000 },
-//   })
-// );
 //Passport
 app.use(passport.initialize());
-// app.use(passport.session());
 
 //Handlebars
 app.engine('handlebars', engine());
@@ -54,7 +42,9 @@ app.use('/', viewsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/sessions', sessionsRouter);
 app.use('/api/password', passwordRouter);
+app.use('/api/test', testRouter);
 
 app.listen(config.PORT, () => {
-  console.log('Escuchando al puerto 8080...');
+  logger.info(`Servidor escuchando en el puerto ${config.PORT}`);
+  logger.info(`Enviroment: ${config.ENVIROMENT}`);
 });

@@ -10,6 +10,6 @@ export const sendRecoveryEmail = async ({ _id: userID, email }, token) => {
   try {
     await transporter.sendMail(mailOptions);
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 };

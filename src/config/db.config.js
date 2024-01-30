@@ -1,11 +1,12 @@
 import mongoose from 'mongoose';
 import config from './config.js';
+import { logger } from '../utils/logger.utils.js';
 
 mongoose
   .connect(config.DB_URI)
   .then(() => {
-    console.log('Conectado a db');
+    logger.info('Conectado a db');
   })
   .catch((e) => {
-    console.log(e);
+    logger.fatal('Error al conectar a db', e);
   });

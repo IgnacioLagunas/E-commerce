@@ -30,7 +30,6 @@ export const productAuthorizathionMiddleware = async (req, res, next) => {
       user,
     } = req;
     const product = await ProductsService.findOne(id);
-    console.log({ product });
     if (
       user.role === 'admin' ||
       (user.role === 'premium' && user.email === product.owner)

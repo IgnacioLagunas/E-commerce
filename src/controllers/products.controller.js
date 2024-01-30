@@ -3,7 +3,6 @@ import ProductsService from '../services/products.service.js';
 class ProductsController {
   getAllProducts = async (req, res) => {
     let { limit, page, sort, query } = req.query;
-    console.log({ sort });
     if (!['asc', 'desc'].includes(sort)) sort = null;
     try {
       const products = await ProductsService.getAllwithParams({
@@ -53,7 +52,6 @@ class ProductsController {
   };
 
   updateProduct = async (req, res) => {
-    console.log('en controller');
     try {
       const { id } = req.params;
       const update = req.body;

@@ -101,7 +101,6 @@ passport.use(
       const { _json: googleUser } = profile;
       try {
         const userInDB = await UsersService.findOneByEmail(googleUser.email);
-        console.log('aca');
         if (!userInDB) {
           const {
             given_name: first_name,
@@ -133,7 +132,6 @@ passport.use(
       callbackURL: 'http://localhost:8080/api/sessions/auth/github/callback',
     },
     async (accessToken, refreshToken, profile, done) => {
-      console.log({ profile });
       const { displayName: name, emails } = profile;
       if (!emails || emails.length == 0) {
         return done(null, null, {
@@ -146,7 +144,6 @@ passport.use(
         const user = await UsersService.findOneByEmail(email);
         if (!user) {
           const [first_name, last_name] = name.split(' ');
-          console.log({ first_name, last_name });
           const newUser = await UsersService.createOne({
             first_name,
             last_name,
@@ -157,7 +154,6 @@ passport.use(
       } catch (error) {
         done(error);
       }
-      // console.log({ profile });
     }
   )
 );

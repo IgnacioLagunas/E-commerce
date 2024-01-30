@@ -1,3 +1,4 @@
+import { logger } from '../../utils/logger.utils.js';
 import productModel from '../models/product.model.js';
 import BasicMongoDAO from './basic.dao.js';
 
@@ -6,8 +7,8 @@ class ProductsMongo extends BasicMongoDAO {
     super(productModel);
   }
   async getAllwithParams(params, query = {}) {
-    console.log({ params });
-    console.log({ query });
+    logger.info({ params });
+    logger.info({ query });
 
     return await productModel.paginate(query, params);
   }

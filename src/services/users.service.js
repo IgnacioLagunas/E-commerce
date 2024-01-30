@@ -1,5 +1,6 @@
 import UsersDao from '../data-access/daos/users.dao.js';
 import { UserDB } from '../data-access/dtos/userDTOs.js';
+import { logger } from '../utils/logger.utils.js';
 import CartsService from './carts.service.js';
 
 class UsersService {
@@ -14,14 +15,14 @@ class UsersService {
   async createOne(obj) {
     const { _id: cart_id } = await this.cartsService.createOne();
     const newUser = new UserDB({ ...obj, cart: cart_id });
-    console.log({ newUser });
+    logger.http('Nuevo usuario: ', { newUser });
     return await this.usersDao.createOne(newUser);
   }
 
   async updateOne(id, newObj) {
     const user = await this.findOne(id);
     const newUser = { ...user._doc, ...newObj };
-    console.log({ newUser });
+    logger.http('Usuario actualizado: ', { newUser });
     return await this.usersDao.updateOne({ _id: id }, newUser);
   }
 

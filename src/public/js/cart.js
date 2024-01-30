@@ -92,7 +92,6 @@ const deleteWholeProductFromCart = async (productId) => {
       },
     },
   } = await axios.get(`http://localhost:8080/api/sessions/current`);
-  console.log(cartId);
   await axios.delete(
     `http://localhost:8080/api/carts/${cartId}/product/${productId}`
   );

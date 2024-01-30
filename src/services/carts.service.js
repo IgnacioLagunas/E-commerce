@@ -1,6 +1,8 @@
 import CartsDao from '../data-access/daos/carts.dao.js';
 import { CartPurchaseResponse } from '../data-access/dtos/cartDTOs.js';
 import { CartNotFoundError, CartIsEmptyError } from '../errors/cart.errors.js';
+import { EntitiyNotFoundError } from '../errors/errors.js';
+import { logger } from '../utils/logger.utils.js';
 import ProductsService from './products.service.js';
 import TicketsService from './tickets.service.js';
 import mongoose from 'mongoose';
@@ -26,7 +28,8 @@ class CartsService {
 
   async addOrRemoveFromCart(cartId, productId, qtty = 1) {
     const cart = await this.cartsDao.findOne(cartId);
-    console.log(cart);
+    if (!cart) throw new EntitiyNotFoundError('Cart');
+    logger.http('Cart found: ', cart);
     const productIdMongo = new mongoose.Types.ObjectId(productId);
     const prodIndex = cart.products.findIndex((p) =>
       p.product._id.equals(productIdMongo)
@@ -47,7 +50,7 @@ class CartsService {
     const prodIndex = cart.products.findIndex((p) =>
       p.product._id.equals(productIdMongo)
     );
-    console.log('product deleted  ', cart.products[prodIndex].product.title);
+    logger.http('product deleted  ', cart.products[prodIndex].product.title);
     if (prodIndex != -1) cart.products.splice(prodIndex, 1);
     return await this.cartsDao.saveCart(cart);
   }
@@ -81,7 +84,7 @@ class CartsService {
         'Products out of stock'
       );
     }
-    console.log(productsInStock);
+    logger.debug(productsInStock);
     const ticket = await TicketsService.createOne(productsInStock, user);
     await this.clearAfterPurchase(cart_Id, productsInStock);
     return new CartPurchaseResponse(

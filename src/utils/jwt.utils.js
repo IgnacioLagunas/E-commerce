@@ -8,7 +8,6 @@ export const generateNewToken = (
   expiresIn = '1h',
   secret = config.JWT_SECRET
 ) => {
-  console.log(UserJWT(user));
   return jwt.sign(UserJWT(user), secret, { expiresIn });
 };
 

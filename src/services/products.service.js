@@ -12,7 +12,6 @@ class ProductsService {
 
   async getAllwithParams(params) {
     const { limit = 10, sort = null, page = 1, query = {} } = params;
-    console.log(query);
     const result = await this.productsDao.getAllwithParams(
       {
         limit,
@@ -30,11 +29,10 @@ class ProductsService {
   }
 
   async updateOne(id, newObj) {
-    console.log('en service');
     const product = await this.findOne(id);
     if (!product) throw new EntitiyNotFoundError('Product');
     const newProduct = { ...product._doc, ...newObj };
-    console.log({ newProduct });
+    logger.http('Product updated: ', { newProduct });
     return await this.productsDao.updateOne({ _id: id }, newProduct);
   }
 

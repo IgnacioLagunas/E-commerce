@@ -3,6 +3,7 @@ import { EntitiyNotFoundError, MissingDataError } from '../errors/errors.js';
 import usersService from '../services/users.service.js';
 import { generateNewToken, verifyToken } from '../utils/jwt.utils.js';
 import passport from 'passport';
+import { logger } from '../utils/logger.utils.js';
 
 export const tokenValidationMiddleware = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user) => {
@@ -19,7 +20,7 @@ export const tokenValidationMiddleware = (req, res, next) => {
 export const createNewTokenAndSendToCookieMiddleware = (req, res, next) => {
   try {
     const token = generateNewToken(req.user);
-    console.log({ token });
+    logger.info({ token });
     res.cookie('token', token, {
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
     });
@@ -51,7 +52,7 @@ export const checkTokenForPasswordChangeMiddleware = async (req, res, next) => {
       throw new EntitiyNotFoundError(`User with id ${id}`);
     }
     const decoded = verifyToken(token, config.JWT_SECRET + user.password || '');
-    console.log('decoded', decoded);
+    logger.info('Jwt token payload: ', decoded);
     req.user = { email: decoded.email };
     next();
   } catch (error) {
