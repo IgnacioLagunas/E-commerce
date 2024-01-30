@@ -7,6 +7,7 @@ import viewsRouter from './routes/views.router.js';
 import sessionsRouter from './routes/sessions.router.js';
 import passwordRouter from './routes/password.router.js';
 import testRouter from './routes/tests.router.js';
+import mocksRouter from './routes/mocks.router.js';
 import { __dirname } from './utils.js';
 import config from './config/config.js';
 import passport from 'passport';
@@ -43,6 +44,7 @@ app.use('/api/users', usersRouter);
 app.use('/api/sessions', sessionsRouter);
 app.use('/api/password', passwordRouter);
 app.use('/api/test', testRouter);
+app.use('/api/mock', mocksRouter);
 
 app.listen(config.PORT, () => {
   logger.info(`Servidor escuchando en el puerto ${config.PORT}`);

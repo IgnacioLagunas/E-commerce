@@ -47,7 +47,7 @@ class ProductsController {
       });
       res.status(200).json({ message: 'Product created', createdProduct });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(error.code || 500).json({ message: error.message });
     }
   };
 

@@ -25,7 +25,7 @@ class CartsController {
         cart: result,
       });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(error.code || 500).json({ message: error.message });
     }
   };
 
@@ -38,7 +38,7 @@ class CartsController {
         message: 'Product added to cart',
       });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(error.code || 500).json({ message: error.message });
     }
   };
 
@@ -51,7 +51,7 @@ class CartsController {
         cart: result,
       });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(error.code || 500).json({ message: error.message });
     }
   };
 
@@ -63,7 +63,7 @@ class CartsController {
         message: 'Product deleted from cart',
       });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(error.code || 500).json({ message: error.message });
     }
   };
 
@@ -79,11 +79,7 @@ class CartsController {
         response,
       });
     } catch (error) {
-      if (error.name === 'CartIsEmptyError') {
-        res.status(400).json({ message: error.message });
-      } else {
-        res.status(500).json({ message: error.message });
-      }
+      res.status(error.code || 500).json({ message: error.message });
     }
   };
 }
