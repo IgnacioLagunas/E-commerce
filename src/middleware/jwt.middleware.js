@@ -20,7 +20,8 @@ export const tokenValidationMiddleware = (req, res, next) => {
 export const createNewTokenAndSendToCookieMiddleware = (req, res, next) => {
   try {
     const token = generateNewToken(req.user);
-    logger.info({ token });
+    logger.info('JWT Token: ', token);
+    console.log(token);
     res.cookie('token', token, {
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
     });

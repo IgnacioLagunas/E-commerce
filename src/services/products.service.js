@@ -1,5 +1,6 @@
 import ProductsDao from '../data-access/daos/products.dao.js';
 import { EntitiyNotFoundError } from '../errors/errors.js';
+import { logger } from '../utils/logger.utils.js';
 
 class ProductsService {
   constructor(ProductsDao) {

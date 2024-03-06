@@ -7,9 +7,6 @@ class ProductsMongo extends BasicMongoDAO {
     super(productModel);
   }
   async getAllwithParams(params, query = {}) {
-    logger.info({ params });
-    logger.info({ query });
-
     return await productModel.paginate(query, params);
   }
 }
