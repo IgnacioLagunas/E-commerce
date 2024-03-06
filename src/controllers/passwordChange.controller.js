@@ -2,7 +2,7 @@ import config from '../config/config.js';
 import { EntitiyNotFoundError, MissingDataError } from '../errors/errors.js';
 import { SamePasswordAsBeforeError } from '../errors/user.errors.js';
 import usersService from '../services/users.service.js';
-import { createHash, isPasswordValid } from '../utils.js';
+import { createHash, isPasswordValid } from '../utils/password.utils.js';
 import { generateNewToken } from '../utils/jwt.utils.js';
 import { sendRecoveryEmail } from '../utils/mailer.utils.js';
 

@@ -4,7 +4,7 @@ import { Strategy as GitHubStrategy } from 'passport-github2';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt';
 import UsersService from './services/users.service.js';
-import { isPasswordValid } from './utils.js';
+import { isPasswordValid } from './utils/password.utils.js';
 import config from './config/config.js';
 
 // JWT Strategy

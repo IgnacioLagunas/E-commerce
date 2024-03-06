@@ -1,4 +1,4 @@
-import { createHash } from '../../utils.js';
+import { createHash } from '../../utils/password.utils.js';
 
 export class UserResponse {
   constructor(user) {

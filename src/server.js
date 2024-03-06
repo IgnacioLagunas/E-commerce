@@ -1,5 +1,8 @@
 import express from 'express';
 import { engine } from 'express-handlebars';
+import swaggerUi from 'swagger-ui-express';
+import { logger } from './utils/logger.utils.js';
+import { swaggerSetup } from './config/swagger.config.js';
 import productsRouter from './routes/products.router.js';
 import cartsRouter from './routes/carts.router.js';
 import usersRouter from './routes/users.router.js';
@@ -8,7 +11,7 @@ import sessionsRouter from './routes/sessions.router.js';
 import passwordRouter from './routes/password.router.js';
 import testRouter from './routes/tests.router.js';
 import mocksRouter from './routes/mocks.router.js';
-import { __dirname } from './utils.js';
+import { __dirname } from './utils/utils.js';
 import config from './config/config.js';
 import passport from 'passport';
 // Sessions -- mongo
@@ -25,7 +28,6 @@ app.use(express.static(__dirname + '/public'));
 
 // Cookies (temporalmente)
 import cookieParser from 'cookie-parser';
-import { logger } from './utils/logger.utils.js';
 app.use(cookieParser());
 
 //Passport
@@ -45,6 +47,8 @@ app.use('/api/sessions', sessionsRouter);
 app.use('/api/password', passwordRouter);
 app.use('/api/test', testRouter);
 app.use('/api/mock', mocksRouter);
+app.use('/api/swagger', swaggerUi.serve, swaggerUi.setup(swaggerSetup));
+//Swagger
 
 app.listen(config.PORT, () => {
   logger.info(`Servidor escuchando en el puerto ${config.PORT}`);
