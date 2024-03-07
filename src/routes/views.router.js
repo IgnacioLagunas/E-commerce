@@ -6,7 +6,17 @@ const router = Router();
 
 router.get('/home', tokenValidationMiddleware, ViewsController.renderViewHome);
 
-router.get('/product/:productId', ViewsController.renderViewProduct);
+router.get(
+  '/profile',
+  tokenValidationMiddleware,
+  ViewsController.renderViewProfile
+);
+
+router.get(
+  '/product/:productId',
+  tokenValidationMiddleware,
+  ViewsController.renderViewProduct
+);
 
 router.get('/cart', tokenValidationMiddleware, ViewsController.renderViewCart);
 
@@ -20,9 +30,5 @@ router.get(
 );
 
 router.get('/forgot-password', ViewsController.renderViewForgotPassword);
-// router.get('/profile', (req, res) => {
-//   if (!req.session.user) return res.redirect('/login');
-//   res.render('profile', { ...req.session.user });
-// });
 
 export default router;

@@ -1,5 +1,8 @@
 import { Router } from 'express';
+import upload from '../middleware/multer.middleware.js';
 import UsersController from '../controllers/users.controller.js';
+import { tokenValidationMiddleware } from '../middleware/jwt.middleware.js';
+import { hasAuthorizedRoleMiddleware } from '../middleware/auth.middleware.js';
 
 const router = Router();
 
@@ -9,7 +12,25 @@ router.get('/:id', UsersController.findUserById);
 
 router.post('/', UsersController.createNewUser);
 
-router.put('/:id', UsersController.updateUser);
+router.post(
+  '/documents',
+  tokenValidationMiddleware,
+  upload.fields([
+    { name: 'dni', maxCount: 1 },
+    { name: 'address', maxCount: 1 },
+    { name: 'bank', maxCount: 1 },
+  ]),
+  UsersController.saveUserDocuments
+);
+
+router.put('/:id', tokenValidationMiddleware, UsersController.updateUser);
+
+router.put(
+  '/premium/:id',
+  tokenValidationMiddleware,
+  hasAuthorizedRoleMiddleware(['admin']),
+  UsersController.upgradeUser
+);
 
 router.delete('/:id', UsersController.deleteUser);
 

@@ -24,3 +24,19 @@ export class SamePasswordAsBeforeError extends Error {
     this.code = 401;
   }
 }
+export class MissingRequiredDocumentsError extends Error {
+  constructor(missingDocuments) {
+    super();
+    this.message = `Required documents missing: ${missingDocuments}`;
+    this.name = 'MissingRequiredDocumentsError';
+    this.code = 401;
+  }
+}
+export class UserAlreadyAPremiumMemberError extends Error {
+  constructor() {
+    super();
+    this.message = 'User is already a premium member';
+    this.name = 'UserAlreadyAPremiumMemberError';
+    this.code = 401;
+  }
+}

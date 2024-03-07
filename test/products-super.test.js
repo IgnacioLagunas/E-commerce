@@ -22,7 +22,7 @@ before(async () => {
   };
 });
 
-//TEST PRODUCTS ALL
+// GET ALL PRODUCTS
 
 describe('GET /api/products', () => {
   it("should return an object with an array 'payload' that contains the products", async () => {
@@ -43,7 +43,7 @@ describe('GET /api/products', () => {
   });
 });
 
-// CREATED PRODUCT
+// CREATE PRODUCT
 
 describe('POST /api/products', () => {
   const newObjectMock = {
@@ -76,7 +76,7 @@ describe('POST /api/products', () => {
   });
 });
 
-// // UPDATED PRODUCT
+// UPDATE PRODUCT
 
 describe('PUT /api/products/:pid', function () {
   it('Should update a product by id, changing its description to "Updated Description"', async function () {
@@ -93,7 +93,7 @@ describe('PUT /api/products/:pid', function () {
   });
 });
 
-// // DELETE PRODUCT
+// DELETE PRODUCT
 
 describe('DELETE /api/products/:pid', function () {
   it('Should delete a product by id', async function () {

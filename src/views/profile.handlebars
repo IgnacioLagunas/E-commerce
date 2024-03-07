@@ -1,4 +1,21 @@
-<h1>PROFILE</h1>
-<h2>Bienvenido {{first_name}}</h2>
-<h4>Tu email es: {{email}}</h4>
-<button><a href="api/sessions/signout">SIGN OUT</a></button>
+<h1>My Profile</h1>
+<br />
+<h4>Name: {{first_name}} {{last_name}}</h4>
+<h4>Email: {{email}}</h4>
+<h4>Role: {{role}}</h4>
+<br />
+<h2>Upload Documents</h2>
+<form action="/api/users/documents" enctype="multipart/form-data" method="post" id="Form upload documents">
+
+    DNI:
+    <input type="file" name="dni" id="dni" />
+    <br />
+    Direccion:
+    <input type="file" name="address" id="address" />
+    <br />
+    BANK
+    <input type="file" name="bank" id="bank" />
+    <br />
+    <input type="submit" value="CARGAR" />
+
+</form>

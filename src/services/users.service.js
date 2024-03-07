@@ -1,6 +1,11 @@
 import UsersDao from '../data-access/daos/users.dao.js';
 import { UserDB } from '../data-access/dtos/userDTOs.js';
+import {
+  MissingRequiredDocumentsError,
+  UserAlreadyAPremiumMemberError,
+} from '../errors/user.errors.js';
 import { logger } from '../utils/logger.utils.js';
+import { returnMissingDocuments } from '../utils/users.utils.js';
 import CartsService from './carts.service.js';
 
 class UsersService {
@@ -24,6 +29,45 @@ class UsersService {
     const newUser = { ...user._doc, ...newObj };
     logger.http('Usuario actualizado: ', { newUser });
     return await this.usersDao.updateOne({ _id: id }, newUser);
+  }
+
+  async upgradeUser(id) {
+    const user = await this.findOne(id);
+    if (user.role === 'admin' || user.role === 'premium') {
+      throw new UserAlreadyAPremiumMemberError();
+    }
+    const missingDocuments = returnMissingDocuments(user);
+    if (missingDocuments.length > 0) {
+      throw new MissingRequiredDocumentsError(missingDocuments);
+    }
+
+    return await this.updateOne(id, { role: 'premium' });
+  }
+
+  async saveDocuments(id, uploadedDocuments) {
+    const { documents: documentsArray } = await this.findOne(id);
+    for (const documentType in uploadedDocuments) {
+      const existingDocumentIndex = documentsArray.findIndex(
+        (doc) => doc.name === documentType
+      );
+
+      if (existingDocumentIndex !== -1) {
+        // Si ya existe un documento con el mismo nombre, reemplaza el documento existente
+        documentsArray[existingDocumentIndex] = {
+          name: uploadedDocuments[documentType][0].fieldname,
+          reference: uploadedDocuments[documentType][0].path,
+        };
+      } else {
+        // Agrega el nuevo documento al array de documentos
+        documentsArray.push({
+          name: uploadedDocuments[documentType][0].fieldname,
+          reference: uploadedDocuments[documentType][0].path,
+        });
+      }
+    }
+
+    // Actualiza el campo 'documents' en el objeto del usuario
+    return await this.updateOne(id, { documents: documentsArray });
   }
 
   async deleteOne(id) {

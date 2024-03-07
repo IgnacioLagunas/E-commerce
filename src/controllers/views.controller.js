@@ -6,6 +6,10 @@ class ViewsController {
     res.render('home', req.user);
   };
 
+  renderViewProfile = (req, res) => {
+    res.render('profile', req.user);
+  };
+
   renderViewProduct = async (req, res) => {
     const { productId } = req.params;
     const product = await ProductsService.findOne(productId);

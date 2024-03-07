@@ -15,3 +15,12 @@ export class MissingDataError extends Error {
     this.code = 400;
   }
 }
+
+export class RequestBodyRequiredError extends Error {
+  constructor() {
+    super();
+    this.message = `The request body is required`;
+    this.name = 'RequestBodyRequiredError';
+    this.code = 400;
+  }
+}

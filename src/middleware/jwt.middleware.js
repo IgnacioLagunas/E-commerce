@@ -4,6 +4,7 @@ import usersService from '../services/users.service.js';
 import { generateNewToken, verifyToken } from '../utils/jwt.utils.js';
 import passport from 'passport';
 import { logger } from '../utils/logger.utils.js';
+import { updateLastConnection } from '../utils/users.utils.js';
 
 export const tokenValidationMiddleware = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user) => {
@@ -13,6 +14,7 @@ export const tokenValidationMiddleware = (req, res, next) => {
     }
     // Si el usuario existe, agrega la información del usuario al objeto req
     req.user = user;
+    updateLastConnection(user);
     return next();
   })(req, res, next);
 };
@@ -25,6 +27,7 @@ export const createNewTokenAndSendToCookieMiddleware = (req, res, next) => {
     res.cookie('token', token, {
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
     });
+    updateLastConnection(req.user);
     next();
   } catch (error) {
     res.status(500).json(error.message);
