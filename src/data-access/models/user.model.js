@@ -39,6 +39,7 @@ const userSchema = new mongoose.Schema({
   },
   last_connection: {
     type: Date,
+    default: '2024-03-07T01:26:19.422Z',
   },
 });
 

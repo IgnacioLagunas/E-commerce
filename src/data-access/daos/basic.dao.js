@@ -23,8 +23,16 @@ class BasicMongoDAO {
     return await this.model.deleteOne({ _id: id });
   }
 
-  async findOne(id) {
+  async deleteMany(query) {
+    return await this.model.deleteOne({ _id: id });
+  }
+
+  async findOneById(id) {
     return await this.model.findById(id);
+  }
+
+  async findOne(query) {
+    return await this.model.find(query);
   }
 }
 export default BasicMongoDAO;

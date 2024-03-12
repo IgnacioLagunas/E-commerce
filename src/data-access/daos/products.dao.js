@@ -1,4 +1,3 @@
-import { logger } from '../../utils/logger.utils.js';
 import productModel from '../models/product.model.js';
 import BasicMongoDAO from './basic.dao.js';
 

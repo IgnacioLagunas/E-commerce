@@ -1,6 +1,8 @@
 import ProductsDao from '../data-access/daos/products.dao.js';
-import { EntitiyNotFoundError } from '../errors/errors.js';
+import { EntitiyNotFoundError, MissingDataError } from '../errors/errors.js';
+import { UserNotAuthorizedError } from '../errors/user.errors.js';
 import { logger } from '../utils/logger.utils.js';
+import { sendProductDeletionEmail } from '../utils/mailer.utils.js';
 
 class ProductsService {
   constructor(ProductsDao) {
@@ -37,13 +39,24 @@ class ProductsService {
     return await this.productsDao.updateOne({ _id: id }, newProduct);
   }
 
-  async deleteOne(id) {
-    const result = await this.productsDao.deleteOne({ _id: id });
-    return result;
+  async deleteOne(id, user) {
+    const product = await this.findOne(id);
+
+    if (user.role === 'admin') {
+      await this.productsDao.deleteOne({ _id: id });
+      return product;
+    }
+    if (user.role === 'premium' && user.email === product.owner) {
+      await this.productsDao.deleteOne({ _id: id });
+      sendProductDeletionEmail(user, product);
+      return product;
+    }
+    throw new UserNotAuthorizedError();
   }
 
   async findOne(id) {
-    const result = await this.productsDao.findOne(id);
+    if (!id) throw new EntitiyNotFoundError('Id');
+    const result = await this.productsDao.findOneById(id);
     return result;
   }
 }

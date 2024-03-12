@@ -13,7 +13,7 @@ class CartsController {
         cart,
       });
     } catch (error) {
-      return res.status(500).json({ message: error.message });
+      return res.status(error.code || 500).json({ message: error.message });
     }
   };
 

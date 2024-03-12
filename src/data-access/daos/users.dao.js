@@ -6,7 +6,7 @@ class UsersMongo extends BasicMongoDAO {
     super(userModel);
   }
 
-  async findOne(id) {
+  async findOneById(id) {
     const result = await userModel.findById(id).populate({
       path: 'cart',
     });

@@ -21,13 +21,13 @@ class CartsService {
   }
 
   async findOne(id) {
-    const cart = await this.cartsDao.findOne(id);
+    const cart = await this.cartsDao.findOneById(id);
     if (!cart) throw new CartNotFoundError();
     return cart;
   }
 
   async addOrRemoveFromCart(cartId, productId, qtty = 1) {
-    const cart = await this.cartsDao.findOne(cartId);
+    const cart = await this.findOne(cartId);
     if (!cart) throw new EntitiyNotFoundError('Cart');
     logger.http('Cart found: ', cart);
     const productIdMongo = new mongoose.Types.ObjectId(productId);
@@ -45,7 +45,7 @@ class CartsService {
   }
 
   async deleteProductFromCart(cartId, productId) {
-    const cart = await this.cartsDao.findOne(cartId);
+    const cart = await this.findOne(cartId);
     const productIdMongo = new mongoose.Types.ObjectId(productId);
     const prodIndex = cart.products.findIndex((p) =>
       p.product._id.equals(productIdMongo)
@@ -56,7 +56,7 @@ class CartsService {
   }
 
   async clearCart(cartId) {
-    const cart = await this.cartsDao.findOne(cartId);
+    const cart = await this.findOne(cartId);
     cart.products = [];
     return this.cartsDao.saveCart(cart);
   }

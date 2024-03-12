@@ -8,9 +8,9 @@ export class EntitiyNotFoundError extends Error {
 }
 
 export class MissingDataError extends Error {
-  constructor() {
+  constructor(data = []) {
     super();
-    this.message = `Missing data`;
+    this.message = `Missing data: ${data}`;
     this.name = 'MissingDataError';
     this.code = 400;
   }

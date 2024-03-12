@@ -31,7 +31,6 @@ router.delete(
   '/:id',
   tokenValidationMiddleware,
   hasAuthorizedRoleMiddleware(['admin', 'premium']),
-  productAuthorizathionMiddleware,
   ProductsController.deleteProduct
 );
 

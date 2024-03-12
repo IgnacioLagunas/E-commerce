@@ -64,8 +64,11 @@ class ProductsController {
 
   deleteProduct = async (req, res) => {
     try {
-      const { id } = req.params;
-      const productDeleted = await ProductsService.deleteOne(id);
+      const {
+        params: { id },
+        user,
+      } = req;
+      const productDeleted = await ProductsService.deleteOne(id, user);
       res.status(200).json({ message: 'Product deleted', productDeleted });
     } catch (error) {
       res.status(500).json({ message: error.message });

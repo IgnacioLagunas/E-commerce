@@ -1,5 +1,7 @@
 const productsContainer = document.getElementById('cart-products-container');
+const ticketContainer = document.getElementById('ticket-container');
 const comprarButton = document.getElementById('comprar-button');
+const messageContainer = document.getElementById('message-container');
 
 const getCart = async () => {
   productsContainer.innerHTML = '';
@@ -106,7 +108,12 @@ const purchaseCart = async () => {
       },
     },
   } = await axios.get(`http://localhost:8080/api/sessions/current`);
-  await axios.post(`http://localhost:8080/api/carts/${cartId}/purchase`);
+  try {
+    const {
+      data: { response },
+    } = await axios.post(`http://localhost:8080/api/carts/${cartId}/purchase`);
+    console.log(response);
+  } catch (error) {}
   getCart();
 };
 

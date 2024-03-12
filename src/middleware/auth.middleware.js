@@ -1,3 +1,4 @@
+import { EntitiyNotFoundError } from '../errors/errors.js';
 import {
   UserNotAuthorizedError,
   UserNotLoggedInError,
@@ -30,18 +31,16 @@ export const productAuthorizathionMiddleware = async (req, res, next) => {
       user,
     } = req;
     const product = await ProductsService.findOne(id);
+    if (!product) throw new EntitiyNotFoundError('Product');
     if (
       user.role === 'admin' ||
       (user.role === 'premium' && user.email === product.owner)
     ) {
+      req.product = product;
       return next();
     }
     throw new UserNotAuthorizedError();
   } catch (error) {
-    if (error.name !== 'Error') {
-      res.status(error.code).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: error.message });
-    }
+    res.status(error.code || 500).json({ message: error.message });
   }
 };

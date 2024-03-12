@@ -6,7 +6,7 @@ class CartsMongo extends BasicMongoDAO {
     super(cartModel);
   }
 
-  async findOne(id) {
+  async findOneById(id) {
     return await cartModel.findById(id).populate('products.product');
   }
   async saveCart(cart) {

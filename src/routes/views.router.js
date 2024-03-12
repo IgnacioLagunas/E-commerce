@@ -20,6 +20,8 @@ router.get(
 
 router.get('/cart', tokenValidationMiddleware, ViewsController.renderViewCart);
 
+// router.get('/purchase', tokenValidationMiddleware, ViewsController.renderViewCart);
+
 router.get('/login', ViewsController.renderViewLogin);
 
 router.get('/signup', ViewsController.renderViewSignup);

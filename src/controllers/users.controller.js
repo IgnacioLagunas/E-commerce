@@ -72,6 +72,15 @@ class UsersController {
     }
   };
 
+  deleteInnactiveUsers = async (req, res) => {
+    try {
+      await UsersService.deleteInnactive();
+      res.status(200).json({ message: 'Innactive users deleted' });
+    } catch (error) {
+      res.status(error.code || 500).json({ message: error.message });
+    }
+  };
+
   saveUserDocuments = async ({ user: { _id }, files }, res) => {
     try {
       const updatedUser = await UsersService.saveDocuments(_id, files);

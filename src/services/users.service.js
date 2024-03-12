@@ -5,6 +5,7 @@ import {
   UserAlreadyAPremiumMemberError,
 } from '../errors/user.errors.js';
 import { logger } from '../utils/logger.utils.js';
+import { sendAccountDeletionEmail } from '../utils/mailer.utils.js';
 import { returnMissingDocuments } from '../utils/users.utils.js';
 import CartsService from './carts.service.js';
 
@@ -71,11 +72,37 @@ class UsersService {
   }
 
   async deleteOne(id) {
-    return await this.usersDao.deleteOne({ _id: id });
+    const res = await this.usersDao.deleteOne({ _id: id });
+    logger.info('Usuario eliminado: ', { id });
+    return res;
+  }
+
+  async deleteInnactive() {
+    // Buscar usuarios inactivos
+    const fechaDosDiasAtras = new Date();
+    fechaDosDiasAtras.setDate(fechaDosDiasAtras.getDate() - 2);
+
+    try {
+      const innactiveUsers = await this.usersDao.findOne({
+        last_connection: { $lt: fechaDosDiasAtras },
+      });
+      if (innactiveUsers.length === 0) {
+        logger.error('No hay usuarios inactivos');
+        return;
+      }
+      innactiveUsers.forEach(async (user) => {
+        await sendAccountDeletionEmail(user);
+        await this.deleteOne(user._id);
+      });
+      return;
+    } catch (error) {
+      console.error('Error al buscar usuarios inactivos:', error);
+      return;
+    }
   }
 
   async findOne(id) {
-    return await this.usersDao.findOne(id);
+    return await this.usersDao.findOneById(id);
   }
 
   async findOneByEmail(email) {

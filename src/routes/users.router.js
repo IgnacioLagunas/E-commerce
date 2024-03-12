@@ -32,6 +32,13 @@ router.put(
   UsersController.upgradeUser
 );
 
+router.delete(
+  '/innactive',
+  tokenValidationMiddleware,
+  hasAuthorizedRoleMiddleware(['admin']),
+  UsersController.deleteInnactiveUsers
+);
+
 router.delete('/:id', UsersController.deleteUser);
 
 export default router;
