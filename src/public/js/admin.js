@@ -44,12 +44,14 @@ const renderUser = (user) => {
       <br>
       <br>
       <h4> Delete User:</h4>
-      <button class="deleteUser" data-id="${user.id}">  Delete  </button>`;
+      <button class="deleteUser" data-id="${user.id}">  Delete  </button>;
+      <h5 color="red" id="deleteUserMessage"></h5>`;
   addButtonActions();
 };
 
 const addButtonActions = () => {
   addChangeRoleActions();
+  addDeleteUserActions();
 };
 
 const addChangeRoleActions = async () => {
@@ -74,6 +76,29 @@ const changeUsersRole = async (role) => {
   } catch (error) {
     console.log(error);
     roleChangeMessage.innerHTML =
+      error.response.data.message + '!' || 'An error occurred';
+  }
+};
+
+const addDeleteUserActions = async () => {
+  const deleteUserButton = document.querySelector('.deleteUser');
+  deleteUserButton.addEventListener('click', (event) => {
+    event.preventDefault();
+    deleteUser();
+  });
+};
+
+const deleteUser = async () => {
+  const deleteUserMessage = document.getElementById('deleteUserMessage');
+  try {
+    const response = await axios.delete(
+      `http://localhost:8080/api/users/${currentUser.id}`
+    );
+    console.log('response', response);
+    deleteUserMessage.innerHTML = 'User deleted successfully!';
+  } catch (error) {
+    console.log(error);
+    deleteUserMessage.innerHTML =
       error.response.data.message + '!' || 'An error occurred';
   }
 };
