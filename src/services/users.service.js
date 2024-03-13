@@ -1,8 +1,10 @@
 import UsersDao from '../data-access/daos/users.dao.js';
 import { UserDB } from '../data-access/dtos/userDTOs.js';
 import {
+  CannotChangeAdminRoleError,
+  CannotTurnUserIntoAdminError,
   MissingRequiredDocumentsError,
-  UserAlreadyAPremiumMemberError,
+  UserAlreadyThisRoleError,
 } from '../errors/user.errors.js';
 import { logger } from '../utils/logger.utils.js';
 import { sendAccountDeletionEmail } from '../utils/mailer.utils.js';
@@ -32,17 +34,18 @@ class UsersService {
     return await this.usersDao.updateOne({ _id: id }, newUser);
   }
 
-  async upgradeUser(id) {
+  async upgradeOrDowngradeUser(id, newRole) {
     const user = await this.findOne(id);
-    if (user.role === 'admin' || user.role === 'premium') {
-      throw new UserAlreadyAPremiumMemberError();
+    if (user.role === 'admin') throw new CannotChangeAdminRoleError();
+    if (user.role === newRole) throw new UserAlreadyThisRoleError(newRole);
+    if (newRole === 'admin') throw new CannotTurnUserIntoAdminError();
+    if (newRole === 'premium') {
+      const missingDocuments = returnMissingDocuments(user);
+      if (missingDocuments.length > 0) {
+        throw new MissingRequiredDocumentsError(missingDocuments);
+      }
     }
-    const missingDocuments = returnMissingDocuments(user);
-    if (missingDocuments.length > 0) {
-      throw new MissingRequiredDocumentsError(missingDocuments);
-    }
-
-    return await this.updateOne(id, { role: 'premium' });
+    return await this.updateOne(id, { role: newRole });
   }
 
   async saveDocuments(id, uploadedDocuments) {

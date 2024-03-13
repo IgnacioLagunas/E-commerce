@@ -7,6 +7,7 @@ import { hasAuthorizedRoleMiddleware } from '../middleware/auth.middleware.js';
 const router = Router();
 
 router.get('/', UsersController.getAllUsers);
+router.get('/:email', UsersController.getUserByEmail);
 
 router.get('/:id', UsersController.findUserById);
 
@@ -26,10 +27,10 @@ router.post(
 router.put('/:id', tokenValidationMiddleware, UsersController.updateUser);
 
 router.put(
-  '/premium/:id',
+  '/:role/:id',
   tokenValidationMiddleware,
   hasAuthorizedRoleMiddleware(['admin']),
-  UsersController.upgradeUser
+  UsersController.upgradeOrDowngradeUser
 );
 
 router.delete(

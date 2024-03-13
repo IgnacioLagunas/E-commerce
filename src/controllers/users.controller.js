@@ -1,4 +1,6 @@
+import { UserResponse } from '../data-access/dtos/userDTOs.js';
 import {
+  EntitiyNotFoundError,
   MissingDataError,
   RequestBodyRequiredError,
 } from '../errors/errors.js';
@@ -15,10 +17,23 @@ class UsersController {
     }
   };
 
+  getUserByEmail = async (req, res) => {
+    try {
+      const { email } = req.params;
+      const user = await UsersService.findOneByEmail(email);
+      if (!user) throw new EntitiyNotFoundError('User');
+      res.status(200).json({ message: 'User found', user: UserResponse(user) });
+    } catch (error) {
+      console.log(error);
+      res.status(error.code || 500).json({ message: error.message });
+    }
+  };
+
   findUserById = async (req, res) => {
     try {
       const { id } = req.params;
       const user = await UsersService.findOne(id);
+      if (!user) throw new EntitiyNotFoundError('User');
       res.status(200).json({ message: 'User found', user });
     } catch (error) {
       res.status(error.code || 500).json({ message: error.message });
@@ -52,11 +67,11 @@ class UsersController {
     }
   };
 
-  upgradeUser = async (req, res) => {
+  upgradeOrDowngradeUser = async (req, res) => {
     try {
-      const { id } = req.params;
-      await UsersService.upgradeUser(id);
-      res.status(200).json({ message: 'User upgraded' });
+      const { id, role } = req.params;
+      await UsersService.upgradeOrDowngradeUser(id, role);
+      res.status(200).json({ message: `User's role updated to ${role}` });
     } catch (error) {
       res.status(error.code || 500).json({ message: error.message });
     }

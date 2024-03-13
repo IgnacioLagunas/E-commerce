@@ -1,5 +1,4 @@
 const productsContainer = document.getElementById('cart-products-container');
-const ticketContainer = document.getElementById('ticket-container');
 const comprarButton = document.getElementById('comprar-button');
 const messageContainer = document.getElementById('message-container');
 
@@ -113,8 +112,34 @@ const purchaseCart = async () => {
       data: { response },
     } = await axios.post(`http://localhost:8080/api/carts/${cartId}/purchase`);
     console.log(response);
-  } catch (error) {}
+    if (response.ticket != null) {
+      messageContainer.innerHTML = `<h3>Gracias por tu compra!</h3>`;
+      renderTicket(response);
+    } else {
+      messageContainer.innerHTML = `<h3>Los productos elegidos no se encuentran en stock</h3>`;
+    }
+  } catch (error) {
+    messageContainer.innerHTML = `<h3>Ha ocurrido un error con su compra</h3>`;
+  }
   getCart();
+};
+
+const renderTicket = (response) => {
+  const ticketContainer = document.getElementById('ticket-container');
+  const { ticket, products_detail } = response;
+  ticketContainer.innerHTML = `
+  <br>
+    <h3>Ticket number: ${ticket.code}</h3>
+    <h3>Products:</h3>
+    <ul>
+    ${products_detail
+      .map(
+        ({ product, quantity }) =>
+          `<li><h5> ${quantity}  x  ${product.title} - $${product.price}</h5></li>`
+      )
+      .join('')}
+    </ul>
+    <h3>Total: $${ticket.amount}</h3>`;
 };
 
 getCart();

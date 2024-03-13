@@ -32,11 +32,27 @@ export class MissingRequiredDocumentsError extends Error {
     this.code = 401;
   }
 }
-export class UserAlreadyAPremiumMemberError extends Error {
+export class CannotChangeAdminRoleError extends Error {
   constructor() {
     super();
-    this.message = 'User is already a premium member';
-    this.name = 'UserAlreadyAPremiumMemberError';
+    this.message = 'Cannot change the role of an admin';
+    this.name = 'CannotChangeAdminRoleError';
+    this.code = 401;
+  }
+}
+export class CannotTurnUserIntoAdminError extends Error {
+  constructor() {
+    super();
+    this.message = 'Cannot turn a user into an admin using this method';
+    this.name = 'CannotTurnUserIntoAdminError';
+    this.code = 401;
+  }
+}
+export class UserAlreadyThisRoleError extends Error {
+  constructor(role) {
+    super();
+    this.message = `User already has this role: ${role}`;
+    this.name = 'UserAlreadyThisRoleError';
     this.code = 401;
   }
 }

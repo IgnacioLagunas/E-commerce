@@ -5,6 +5,7 @@ export const UserResponse = (user) => {
     name: `${user.first_name} ${user.last_name}`,
     email: user.email,
     role: user.role,
+    id: user._id,
   };
 };
 

@@ -7,7 +7,16 @@ class ViewsController {
   };
 
   renderViewProfile = (req, res) => {
-    res.render('profile', req.user);
+    let { user } = req;
+    user = {
+      ...user.toObject(),
+      isAdmin: user.role === 'admin',
+    };
+    res.render('profile', user);
+  };
+
+  renderViewAdmin = (req, res) => {
+    res.render('admin', req.user);
   };
 
   renderViewProduct = async (req, res) => {
@@ -19,6 +28,11 @@ class ViewsController {
   renderViewCart = (req, res) => {
     res.render('cart');
   };
+  // renderViewPurchase = (req, res) => {
+  //   const { body } = req;
+
+  //   res.render('purchase_detail', body);
+  // };
 
   renderViewLogin = (req, res) => {
     if (req.user) return res.redirect('/home');
