@@ -1,37 +1,37 @@
-import mongoose from 'mongoose';
-import mongoosePaginate from 'mongoose-paginate-v2';
+import { Model, DataTypes } from 'sequelize';
+import { sequelize } from '../../config/db.config.js';
 
-const productSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-  description: {
-    type: String,
-    default: 'No data',
-  },
-  category: {
-    type: String,
-    default: 'No category',
-  },
-  image: {
-    type: String,
-    default:
-      'https://www.google.com/url?sa=i&url=https%3A%2F%2Fstock.adobe.com%2Fsearch%2Fimages%3Fk%3Dno%2Bimage%2Bavailable&psig=AOvVaw353-XUks7sdWbHs6uyEF6T&ust=1699055914811000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCJDBht3CpoIDFQAAAAAdAAAAABAE',
-  },
-  stock: {
-    type: Number,
-    default: Math.floor(Math.random() * 100) + 1,
-  },
-  owner: {
-    type: String,
-    default: 'admin',
-  },
-});
+class Servicio extends Model {}
 
-productSchema.plugin(mongoosePaginate);
-export default mongoose.model('products', productSchema);
+Servicio.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
+    descripcion: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    precio: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    img: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue:
+        'https://www.google.com/url?sa=i&url=https%3A%2F%2Fstock.adobe.com%2Fsearch%2Fimages%3Fk%3Dno%2Bimage%2Bavailable&psig=AOvVaw353-XUks7sdWbHs6uyEF6T&ust=1699055914811000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCJDBht3CpoIDFQAAAAAdAAAAABAE',
+    },
+  },
+  {
+    sequelize, // La instancia de sequelize
+    modelName: 'Servicio', // Nombre del modelo
+    tableName: 'servicios',
+    timestamps: false, // Si no necesitas campos createdAt, updatedAt
+  }
+);
+
+export default Servicio;

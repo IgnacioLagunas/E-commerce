@@ -56,3 +56,11 @@ export class UserAlreadyThisRoleError extends Error {
     this.code = 401;
   }
 }
+export class UserAlreadyExistsError extends Error {
+  constructor(email) {
+    super();
+    this.message = `Email ${email} already registered`;
+    this.name = 'UserAlreadyExistsError';
+    this.code = 401;
+  }
+}

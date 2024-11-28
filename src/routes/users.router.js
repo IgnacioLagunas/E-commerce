@@ -24,7 +24,11 @@ router.post(
   UsersController.saveUserDocuments
 );
 
-router.put('/:id', tokenValidationMiddleware, UsersController.updateUser);
+router.put(
+  '/:id',
+  //  tokenValidationMiddleware,
+  UsersController.updateUser
+);
 
 router.put(
   '/:role/:id',

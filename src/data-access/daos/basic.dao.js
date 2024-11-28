@@ -45,7 +45,7 @@ class BasicDAO {
 
   // Encuentra un registro que coincida con una consulta
   async findOne(query) {
-    return await this.model.findOne({ where: query }); // findOne usa where para filtrar
+    return await this.model.findOne(query); // findOne usa where para filtrar
   }
 }
 

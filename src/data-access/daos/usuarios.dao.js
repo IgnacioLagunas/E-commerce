@@ -7,7 +7,7 @@ class UsuariosDAO extends BasicDAO {
   }
 
   async findByEmail(email) {
-    return await this.findOne(`email = ${email.toLowerCase()}`);
+    return await this.findOne({ where: { email: email.toLowerCase() } });
   }
 }
 

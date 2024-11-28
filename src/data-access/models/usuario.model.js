@@ -5,10 +5,16 @@ class Usuario extends Model {}
 
 Usuario.init(
   {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      primaryKey: true,
+      unique: true,
     },
     nombre: {
       type: DataTypes.STRING,
@@ -23,13 +29,15 @@ Usuario.init(
       allowNull: false,
     },
     rol: {
-      type: DataTypes.ENUM('cliente', 'empleado', 'admin'),
+      type: DataTypes.ENUM('Cliente', 'Empleado', 'Administrador'),
       allowNull: false,
     },
   },
   {
     sequelize,
     modelName: 'Usuario',
+    tableName: 'usuarios',
+    timestamps: false, // Si no necesitas campos createdAt, updatedAt
   }
 );
 

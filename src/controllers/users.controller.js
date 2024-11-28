@@ -61,7 +61,7 @@ class UsersController {
         throw new RequestBodyRequiredError();
       }
       await UsersService.updateOne(id, update);
-      res.status(200).json({ message: 'User updated' });
+      res.status(200).json({ message: 'Usuario Actualizado con éxito' });
     } catch (error) {
       res.status(error.code || 500).json({ message: error.message });
     }
