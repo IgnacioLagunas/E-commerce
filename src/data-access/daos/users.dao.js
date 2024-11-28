@@ -1,23 +1,14 @@
-import userModel from '../models/user.model.js';
-import BasicMongoDAO from './basic.dao.js';
+import Usuario from '../models/usuario.model.js';
+import BasicDAO from './basic.dao.js';
 
-class UsersMongo extends BasicMongoDAO {
+class UsuariosDAO extends BasicDAO {
   constructor() {
-    super(userModel);
-  }
-
-  async findOneById(id) {
-    const result = await userModel.findById(id).populate({
-      path: 'cart',
-    });
-    return result;
+    super(Usuario);
   }
 
   async findByEmail(email) {
-    return await userModel.findOne(email).populate({
-      path: 'cart',
-    });
+    return await this.findOne(`email = ${email.toLowerCase()}`);
   }
 }
 
-export default UsersMongo = new UsersMongo();
+export default new UsuariosDAO();

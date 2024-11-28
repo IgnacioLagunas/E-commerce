@@ -19,7 +19,7 @@ import passport from 'passport';
 // import MongoStore from 'connect-mongo';
 
 // Conección con db
-import './config/db.config.js';
+import { sequelize, connectDB } from './config/db.config.js';
 
 const app = express();
 app.use(express.json());
@@ -50,7 +50,8 @@ app.use('/api/mock', mocksRouter);
 app.use('/api/swagger', swaggerUi.serve, swaggerUi.setup(swaggerSetup));
 //Swagger
 
+// Conección con db
+await connectDB();
 app.listen(config.PORT, () => {
   logger.info(`Servidor escuchando en el puerto ${config.PORT}`);
-  logger.info(`Enviroment: ${config.ENVIROMENT}`);
 });
